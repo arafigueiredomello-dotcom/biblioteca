@@ -1,0 +1,1929 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minha Biblioteca</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ============================================================
+   TORI BRAND SYSTEM
+   Primary:   #2A666E  (Pantone 7715 C 100%)
+   Tint:      #AAC6C8  (Pantone 7715 C 30%)
+   Green:     #C0E85F  (Pantone 2296 C)
+   Coral:     #F07F79  (Pantone 2029 C)
+   Gold:      #F0C068  (Pantone 228 C)
+   Font:      Bricolage Grotesque / Verdana (fallback)
+============================================================ */
+:root {
+  --tori-primary:   #2A666E;
+  --tori-tint:      #AAC6C8;
+  --tori-green:     #C0E85F;
+  --tori-coral:     #F07F79;
+  --tori-gold:      #F0C068;
+  --tori-dark:      #1a3f44;
+  --tori-darker:    #0f2528;
+  --bg:             #f4f7f7;
+  --surface:        #ffffff;
+  --surface2:       #edf3f3;
+  --border:         #d4e2e3;
+  --text:           #1a3f44;
+  --text-muted:     #5a8a8f;
+  --text-light:     #8ab4b8;
+  --radius:         12px;
+  --radius-sm:      8px;
+  --shadow:         0 2px 12px rgba(42,102,110,0.08);
+  --shadow-md:      0 4px 24px rgba(42,102,110,0.12);
+  --font:           'Bricolage Grotesque', Verdana, sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position: fixed; left:0; top:0; bottom:0;
+  width: 220px;
+  background: var(--tori-darker);
+  display: flex; flex-direction: column;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.sidebar-logo {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid rgba(170,198,200,0.15);
+}
+
+.sidebar-logo .logo-mark {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 4px;
+}
+
+.logo-bulls {
+  display: flex; gap: 3px;
+}
+.logo-bull {
+  width: 18px; height: 14px;
+  background: var(--tori-tint);
+  border-radius: 2px 6px 2px 2px;
+  position: relative;
+  clip-path: polygon(0 30%, 15% 0, 40% 0, 40% 20%, 100% 0, 100% 100%, 0 100%);
+}
+.logo-bull:first-child { background: var(--tori-primary); opacity: 0.8; }
+
+.logo-name {
+  font-size: 22px; font-weight: 800; color: #fff;
+  letter-spacing: 3px;
+}
+.logo-sub {
+  font-size: 9px; color: var(--tori-tint);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding-left: 2px;
+}
+
+.sidebar-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--tori-tint);
+  opacity: 0.6; padding: 20px 24px 8px;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 24px;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  font-size: 13px; font-weight: 500;
+  border-left: 3px solid transparent;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.nav-item:hover { color: #fff; background: rgba(170,198,200,0.08); }
+.nav-item.active {
+  color: var(--tori-green);
+  border-left-color: var(--tori-green);
+  background: rgba(192,232,95,0.08);
+}
+.nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 20px 24px;
+  border-top: 1px solid rgba(170,198,200,0.12);
+  font-size: 11px; color: rgba(170,198,200,0.4);
+}
+
+/* ── MAIN ── */
+.main {
+  margin-left: 220px;
+  min-height: 100vh;
+}
+
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 50;
+}
+
+.topbar-title {
+  font-size: 15px; font-weight: 700; color: var(--tori-primary);
+  letter-spacing: 0.3px;
+}
+
+.search-wrap {
+  position: relative;
+}
+.search-input {
+  width: 280px; height: 36px;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 0 16px 0 38px;
+  font-family: var(--font);
+  font-size: 13px; color: var(--text);
+  background: var(--bg);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.search-input:focus { border-color: var(--tori-primary); background: #fff; }
+.search-icon {
+  position: absolute; left: 12px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light); font-size: 14px;
+}
+
+.content { padding: 32px; }
+
+/* ── SECTION HEADERS ── */
+.section-header {
+  display: flex; align-items: baseline; gap: 12px;
+  margin-bottom: 24px;
+}
+.section-title {
+  font-size: 22px; font-weight: 800; color: var(--tori-primary);
+  letter-spacing: -0.5px;
+}
+.section-sub {
+  font-size: 13px; color: var(--text-muted); font-weight: 400;
+}
+
+/* ── STAT CARDS ── */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  position: relative; overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+.stat-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.stat-card.c1::before { background: var(--tori-primary); }
+.stat-card.c2::before { background: var(--tori-green); }
+.stat-card.c3::before { background: var(--tori-gold); }
+.stat-card.c4::before { background: var(--tori-coral); }
+
+.stat-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.stat-value {
+  font-size: 36px; font-weight: 800; color: var(--tori-primary);
+  line-height: 1; margin-bottom: 4px;
+  letter-spacing: -1px;
+}
+.stat-detail {
+  font-size: 12px; color: var(--text-muted);
+}
+
+/* ── CHARTS GRID ── */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 32px;
+}
+.charts-grid.three { grid-template-columns: 2fr 1fr; }
+
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.chart-title {
+  font-size: 13px; font-weight: 700; color: var(--tori-primary);
+  letter-spacing: 0.3px; margin-bottom: 4px;
+}
+.chart-sub { font-size: 11px; color: var(--text-muted); margin-bottom: 20px; }
+.chart-wrap { position: relative; }
+
+/* ── RANKING LISTS ── */
+.rank-list { list-style: none; }
+.rank-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.rank-item:last-child { border-bottom: none; }
+.rank-num {
+  font-size: 11px; font-weight: 700; color: var(--tori-tint);
+  width: 22px; text-align: right; flex-shrink: 0;
+}
+.rank-bar-wrap { flex: 1; }
+.rank-name {
+  font-size: 13px; font-weight: 500; color: var(--text);
+  margin-bottom: 3px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.rank-bar {
+  height: 4px; border-radius: 2px;
+  background: var(--tori-tint); opacity: 0.5;
+  transition: width 0.8s ease;
+}
+.rank-bar.fill-1 { background: var(--tori-primary); opacity: 1; }
+.rank-bar.fill-2 { background: var(--tori-primary); opacity: 0.8; }
+.rank-bar.fill-3 { background: var(--tori-primary); opacity: 0.65; }
+.rank-count {
+  font-size: 12px; font-weight: 700; color: var(--tori-primary);
+  flex-shrink: 0; min-width: 28px; text-align: right;
+}
+
+/* ── YEAR FILTERS ── */
+.filter-tabs {
+  display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;
+}
+.filter-tab {
+  padding: 6px 16px; border-radius: 20px;
+  font-family: var(--font); font-size: 12px; font-weight: 600;
+  cursor: pointer; border: 1.5px solid var(--border);
+  background: var(--surface); color: var(--text-muted);
+  transition: all 0.2s;
+}
+.filter-tab:hover { border-color: var(--tori-primary); color: var(--tori-primary); }
+.filter-tab.active {
+  background: var(--tori-primary); border-color: var(--tori-primary);
+  color: #fff;
+}
+
+/* ── BOOK TABLE ── */
+.table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.table-header-row {
+  display: flex; align-items: center; gap: 0;
+  background: var(--tori-darker);
+  padding: 0 20px;
+}
+.th {
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--tori-tint);
+  padding: 12px 8px; cursor: pointer; user-select: none;
+  display: flex; align-items: center; gap: 4px;
+}
+.th:hover { color: #fff; }
+.th.sorted { color: var(--tori-green); }
+
+.col-num   { width: 40px; flex-shrink: 0; }
+.col-date  { width: 90px; flex-shrink: 0; }
+.col-title { flex: 1; min-width: 0; }
+.col-author{ width: 170px; flex-shrink: 0; }
+.col-genre { width: 130px; flex-shrink: 0; }
+.col-lang  { width: 90px; flex-shrink: 0; }
+.col-pages { width: 60px; flex-shrink: 0; text-align: right; }
+.col-year  { width: 55px; flex-shrink: 0; }
+
+.book-row {
+  display: flex; align-items: center; gap: 0;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background 0.15s;
+}
+.book-row:last-child { border-bottom: none; }
+.book-row:nth-child(even) { background: #fafcfc; }
+.book-row:hover { background: #edf6f6; }
+
+.td {
+  font-size: 13px; padding: 10px 8px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.td.col-num { color: var(--text-light); font-size: 11px; }
+.td.col-date { color: var(--text-muted); font-size: 12px; }
+.td.col-title { color: var(--tori-primary); font-weight: 600; }
+.td.col-pages { text-align: right; color: var(--text-muted); font-size: 12px; }
+.td.col-year { color: var(--text-muted); font-size: 12px; }
+
+.genre-badge {
+  display: inline-block;
+  padding: 2px 8px; border-radius: 10px;
+  font-size: 10px; font-weight: 600;
+  background: var(--surface2); color: var(--tori-primary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.pagination {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px; color: var(--text-muted);
+}
+.page-btns { display: flex; gap: 4px; }
+.page-btn {
+  width: 32px; height: 32px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 13px; font-weight: 600;
+  border: 1.5px solid var(--border); background: var(--surface);
+  color: var(--text-muted); font-family: var(--font);
+  transition: all 0.15s;
+}
+.page-btn:hover { border-color: var(--tori-primary); color: var(--tori-primary); }
+.page-btn.active {
+  background: var(--tori-primary); border-color: var(--tori-primary);
+  color: #fff;
+}
+.page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(15,37,40,0.7); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  width: 520px; max-height: 90vh; overflow-y: auto;
+  transform: translateY(20px); transition: transform 0.2s;
+  box-shadow: 0 20px 60px rgba(15,37,40,0.3);
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-header {
+  background: var(--tori-darker);
+  padding: 24px 28px;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.modal-title {
+  font-size: 18px; font-weight: 800; color: #fff;
+  line-height: 1.3; margin-bottom: 4px;
+}
+.modal-orig {
+  font-size: 12px; color: var(--tori-tint); font-style: italic;
+}
+.modal-body { padding: 24px 28px; }
+.modal-row {
+  display: flex; gap: 8px;
+  padding: 8px 0; border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.modal-row:last-child { border-bottom: none; }
+.modal-key {
+  font-weight: 600; color: var(--text-muted); font-size: 11px;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  width: 110px; flex-shrink: 0; padding-top: 1px;
+}
+.modal-val { color: var(--text); }
+.modal-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,0.1); border: none;
+  color: #fff; font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font); transition: background 0.2s;
+}
+.modal-close:hover { background: rgba(255,255,255,0.2); }
+.modal-header { position: relative; }
+
+/* ── YEAR DETAIL SECTION ── */
+.year-cards {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px;
+  margin-bottom: 32px;
+}
+.year-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 12px;
+  text-align: center; cursor: pointer;
+  transition: all 0.2s;
+}
+.year-card:hover { border-color: var(--tori-primary); }
+.year-card.active {
+  border-color: var(--tori-primary);
+  background: var(--tori-primary); color: #fff;
+}
+.year-card.active .year-num { color: #fff; }
+.year-card.active .year-count { color: var(--tori-green); }
+.year-num { font-size: 16px; font-weight: 800; color: var(--tori-primary); }
+.year-count { font-size: 22px; font-weight: 800; color: var(--tori-primary); margin: 4px 0; }
+.year-label { font-size: 10px; color: var(--text-muted); }
+
+/* ── VIEWS ── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── HEATMAP ── */
+.heatmap-grid {
+  display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px;
+  margin-top: 12px;
+}
+.heatmap-month {
+  border-radius: 4px; height: 52px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 600;
+  transition: transform 0.15s;
+  cursor: default;
+}
+.heatmap-month:hover { transform: scale(1.05); }
+.heat-0 { background: var(--surface2); color: var(--text-light); }
+.heat-1 { background: #d4eaec; color: var(--tori-primary); }
+.heat-2 { background: #aac6c8; color: var(--tori-dark); }
+.heat-3 { background: #6fa8ac; color: #fff; }
+.heat-4 { background: var(--tori-primary); color: #fff; }
+.heat-5 { background: var(--tori-dark); color: var(--tori-green); }
+.hm-count { font-size: 18px; font-weight: 800; line-height: 1; }
+.hm-label { font-size: 9px; opacity: 0.8; margin-top: 2px; }
+
+/* ── LANGUAGE FLAGS / DOTS ── */
+.lang-dot {
+  display: inline-block; width: 8px; height: 8px;
+  border-radius: 50%; margin-right: 6px; flex-shrink: 0;
+}
+
+/* ── RESPONSIVE scrollable table ── */
+.table-scroll { overflow-x: auto; }
+
+/* ── EMPTY STATE ── */
+.empty {
+  text-align: center; padding: 48px;
+  color: var(--text-muted); font-size: 14px;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-row {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 8px;
+}
+.progress-label { font-size: 12px; width: 110px; flex-shrink: 0; color: var(--text); }
+.progress-bar-bg {
+  flex: 1; height: 8px; border-radius: 4px;
+  background: var(--surface2); overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%; border-radius: 4px;
+  background: var(--tori-primary);
+  transition: width 0.8s ease;
+}
+.progress-count {
+  font-size: 12px; font-weight: 700; color: var(--tori-primary);
+  width: 28px; text-align: right;
+}
+
+
+/* === MOBILE RESPONSIVE === */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed; bottom: 0; left: 0; right: 0; top: auto;
+    width: 100%; height: 58px; flex-direction: row;
+    border-top: 1px solid rgba(170,198,200,0.2); z-index: 200;
+  }
+  .sidebar-logo, .sidebar-label, .sidebar-footer { display: none; }
+  .nav-item {
+    flex: 1; flex-direction: column; gap: 2px;
+    padding: 6px 4px; font-size: 9px; letter-spacing: 0;
+    border-left: none; border-top: 3px solid transparent;
+    justify-content: center; align-items: center;
+  }
+  .nav-item.active { border-top-color: var(--tori-green); border-left: none; background: rgba(192,232,95,0.08); }
+  .nav-icon { font-size: 20px; width: auto; }
+  .main { margin-left: 0; padding-bottom: 66px; }
+  .topbar { padding: 0 16px; }
+  .search-input { width: 170px; font-size: 12px; }
+  .content { padding: 16px; }
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .stat-value { font-size: 28px; }
+  .charts-grid, .charts-grid.three { grid-template-columns: 1fr !important; }
+  .year-cards { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .col-genre, .col-lang, .col-year, .col-pages { display: none; }
+  .table-header-row .th.col-genre,
+  .table-header-row .th.col-lang,
+  .table-header-row .th.col-year,
+  .table-header-row .th.col-pages { display: none; }
+  .section-title { font-size: 18px; }
+  .heatmap-grid { grid-template-columns: repeat(6, 1fr); }
+  .modal { width: 95vw; }
+}
+
+/* === FAB ADD BUTTON === */
+.fab {
+  position: fixed; bottom: 78px; right: 18px;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--tori-primary); color: #fff;
+  font-size: 28px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 150;
+  box-shadow: 0 4px 20px rgba(42,102,110,0.45);
+  border: none; font-family: var(--font);
+  transition: transform 0.2s, background 0.2s;
+}
+.fab:hover { transform: scale(1.08); background: var(--tori-dark); }
+@media (min-width: 769px) { .fab { bottom: 28px; } }
+
+/* === ADD MODAL === */
+.add-overlay {
+  position: fixed; inset: 0; z-index: 600;
+  background: rgba(15,37,40,0.75); backdrop-filter: blur(4px);
+  display: flex; align-items: flex-end; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.25s;
+}
+.add-overlay.open { opacity: 1; pointer-events: all; }
+.add-panel {
+  background: var(--surface); border-radius: 20px 20px 0 0;
+  width: 100%; max-width: 560px; padding: 24px 22px 36px;
+  transform: translateY(40px); transition: transform 0.25s;
+  max-height: 90vh; overflow-y: auto;
+}
+.add-overlay.open .add-panel { transform: translateY(0); }
+@media (min-width: 769px) {
+  .add-overlay { align-items: center; }
+  .add-panel { border-radius: 16px; }
+}
+.add-title { font-size: 16px; font-weight: 800; color: var(--tori-primary); margin-bottom: 2px; }
+.add-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 18px; }
+.f-group { margin-bottom: 14px; }
+.f-label { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+  color: var(--text-muted); display: block; margin-bottom: 5px; }
+.f-input {
+  width: 100%; height: 40px; border: 1.5px solid var(--border); border-radius: 8px;
+  padding: 0 13px; font-family: var(--font); font-size: 13px;
+  color: var(--text); background: var(--bg); outline: none; transition: border-color 0.2s;
+}
+.f-input:focus { border-color: var(--tori-primary); background: #fff; }
+input[type="date"] { color-scheme: light; }
+.f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn-add {
+  width: 100%; height: 44px; border-radius: 10px;
+  background: var(--tori-primary); border: none;
+  color: #fff; font-family: var(--font); font-size: 14px; font-weight: 700;
+  cursor: pointer; margin-top: 4px; transition: background 0.2s;
+}
+.btn-add:hover { background: var(--tori-dark); }
+.btn-add:disabled { opacity: 0.5; cursor: default; }
+.add-status { font-size: 12px; text-align: center; min-height: 18px; margin-top: 8px; color: var(--text-muted); }
+.add-status.ok { color: var(--tori-primary); font-weight: 600; }
+.add-status.err { color: var(--tori-coral); }
+.preview-box { background: var(--surface2); border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; }
+.preview-title { font-size: 14px; font-weight: 700; color: var(--tori-primary); margin-bottom: 2px; }
+.preview-meta { font-size: 11px; color: var(--text-muted); }
+.step-row { display: flex; align-items: center; gap: 8px; font-size: 11px;
+  color: var(--text-muted); padding: 6px 10px; background: var(--surface2);
+  border-radius: 6px; margin-bottom: 6px; }
+.step-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
+.step-dot.spin { background: var(--tori-primary); animation: spin-pulse 1s infinite; }
+.step-dot.ok { background: var(--tori-green); }
+@keyframes spin-pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+
+/* === EXTRA MOBILE POLISH === */
+@media (max-width: 768px) {
+  /* bigger touch targets */
+  .book-row { min-height: 52px; }
+  .filter-tab { height: 36px; font-size: 13px; }
+  .page-btn { width: 38px; height: 38px; }
+  /* better topbar on mobile */
+  .topbar-title { font-size: 13px; }
+  /* remove hover effects on touch */
+  .stat-card:hover { transform: none; box-shadow: var(--shadow); }
+  /* year cards smaller */
+  .year-card { padding: 12px 8px; }
+  .year-count { font-size: 18px; }
+  .year-num { font-size: 13px; }
+  /* fab above nav bar */
+  .fab { bottom: 72px; }
+  /* pull-down add panel handle */
+  .add-panel::before {
+    content: ''; display: block;
+    width: 40px; height: 4px; border-radius: 2px;
+    background: var(--border); margin: 0 auto 16px;
+  }
+  /* date input larger on mobile */
+  input[type="date"].f-input { font-size: 16px !important; height: 48px; }
+  /* chart cards less padding */
+  .chart-card { padding: 16px 14px; }
+  .rank-item { padding: 6px 0; }
+}
+
+
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <span style="font-size:26px;font-weight:800;color:#fff;letter-spacing:2px;">📚</span>
+      <span class="logo-name" style="letter-spacing:1px;font-size:18px;">Biblioteca</span>
+    </div>
+  </div>
+
+  <div class="sidebar-label">Biblioteca</div>
+  <a class="nav-item active" data-view="dashboard" onclick="showView('dashboard',this)">
+    <span class="nav-icon">📊</span> Dashboard
+  </a>
+  <a class="nav-item" data-view="anos" onclick="showView('anos',this)">
+    <span class="nav-icon">📅</span> Por Ano
+  </a>
+  <a class="nav-item" data-view="autores" onclick="showView('autores',this)">
+    <span class="nav-icon">✍️</span> Autores
+  </a>
+  <a class="nav-item" data-view="generos" onclick="showView('generos',this)">
+    <span class="nav-icon">🏷️</span> Gêneros
+  </a>
+  <a class="nav-item" data-view="editoras" onclick="showView('editoras',this)">
+    <span class="nav-icon">🏢</span> Editoras
+  </a>
+  <a class="nav-item" data-view="livros" onclick="showView('livros',this)">
+    <span class="nav-icon">📚</span> Todos os Livros
+  </a>
+
+  <div class="sidebar-footer">372 livros · 2019–2026</div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="topbar">
+    <span class="topbar-title" id="topbar-title">Dashboard</span>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" id="search-input"
+             placeholder="Buscar livros, autores..." oninput="onSearch(this.value)">
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- ═══ DASHBOARD VIEW ═══ -->
+    <div class="view active" id="view-dashboard">
+      <div class="section-header">
+        <span class="section-title">Visão Geral</span>
+        <span class="section-sub">2019 – 2025</span>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card c1">
+          <div class="stat-label">Total de Livros</div>
+          <div class="stat-value" id="stat-total">364</div>
+          <div class="stat-detail">2019–2026</div>
+        </div>
+        <div class="stat-card c2">
+          <div class="stat-label">Páginas Lidas</div>
+          <div class="stat-value" id="total-pages">—</div>
+          <div class="stat-detail">estimado</div>
+        </div>
+        <div class="stat-card c3">
+          <div class="stat-label">Autores Únicos</div>
+          <div class="stat-value" id="unique-authors">—</div>
+          <div class="stat-detail">de <span id="unique-countries">—</span> idiomas</div>
+        </div>
+        <div class="stat-card c4">
+          <div class="stat-label">Média Anual</div>
+          <div class="stat-value">~56</div>
+          <div class="stat-detail">~1 livro por semana</div>
+        </div>
+      </div>
+
+      <!-- Linha 1: barras anuais + heatmap mensal -->
+      <div class="charts-grid" style="grid-template-columns: 1.4fr 1fr; margin-bottom:20px;">
+        <div class="chart-card">
+          <div class="chart-title">Livros por Ano</div>
+          <div class="chart-sub">Total de leituras concluídas</div>
+          <div class="chart-wrap" style="height:200px">
+            <canvas id="chartAnual"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Livros por Mês</div>
+          <div class="chart-sub">Distribuição ao longo do ano (acumulado)</div>
+          <div class="chart-wrap" style="height:200px">
+            <canvas id="chartMes"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Linha 2: gêneros + idiomas -->
+      <div class="charts-grid" style="margin-bottom:20px;">
+        <div class="chart-card">
+          <div class="chart-title">Gêneros Literários</div>
+          <div class="chart-sub">Distribuição por categoria</div>
+          <div class="chart-wrap" style="height:220px">
+            <canvas id="chartGenero"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Idioma Original</div>
+          <div class="chart-sub">Idioma em que o livro foi escrito</div>
+          <div class="chart-wrap" style="height:220px">
+            <canvas id="chartIdioma"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Linha 3: heatmap de meses -->
+      <div class="chart-card" style="margin-bottom:20px;">
+        <div class="chart-title">Mapa de Leitura</div>
+        <div class="chart-sub">Livros lidos por mês, todos os anos</div>
+        <div id="heatmap-container"></div>
+      </div>
+
+      <!-- Top autores + páginas por ano -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">Top 10 Autores</div>
+          <div class="chart-sub">Mais lidos na coleção</div>
+          <ul class="rank-list" id="top-authors-list"></ul>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Páginas por Ano</div>
+          <div class="chart-sub">Volume de leitura estimado</div>
+          <div class="chart-wrap" style="height:200px">
+            <canvas id="chartPaginas"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ ANOS VIEW ═══ -->
+    <div class="view" id="view-anos">
+      <div class="section-header">
+        <span class="section-title">Por Ano</span>
+        <span class="section-sub">Selecione um ano para explorar</span>
+      </div>
+      <div class="year-cards" id="year-cards-container"></div>
+
+      <div id="year-detail-area"></div>
+    </div>
+
+    <!-- ═══ AUTORES VIEW ═══ -->
+    <div class="view" id="view-autores">
+      <div class="section-header">
+        <span class="section-title">Autores</span>
+        <span class="section-sub">Todos os autores da coleção</span>
+      </div>
+      <div class="charts-grid" style="margin-bottom:28px;">
+        <div class="chart-card">
+          <div class="chart-title">Top 15 Autores Mais Lidos</div>
+          <div class="chart-sub">Número de livros por autor</div>
+          <ul class="rank-list" id="authors-full-list"></ul>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Distribuição por Idioma</div>
+          <div class="chart-sub">Idioma original dos livros</div>
+          <div id="lang-bars-container"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ GÊNEROS VIEW ═══ -->
+    <div class="view" id="view-generos">
+      <div class="section-header">
+        <span class="section-title">Gêneros</span>
+        <span class="section-sub">Distribuição por categoria literária</span>
+      </div>
+      <div class="charts-grid" style="grid-template-columns: 1fr 1.6fr; margin-bottom:28px;">
+        <div class="chart-card">
+          <div class="chart-title">Distribuição Geral</div>
+          <div class="chart-sub">Proporção de gêneros</div>
+          <div class="chart-wrap" style="height:280px">
+            <canvas id="chartGenero2"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Gêneros ao Longo dos Anos</div>
+          <div class="chart-sub">Evolução das preferências</div>
+          <div class="chart-wrap" style="height:280px">
+            <canvas id="chartGeneroAno"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ EDITORAS VIEW ═══ -->
+    <div class="view" id="view-editoras">
+      <div class="section-header">
+        <span class="section-title">Editoras</span>
+        <span class="section-sub">Distribuição por editora</span>
+      </div>
+      <div class="charts-grid" style="grid-template-columns: 1fr 1.6fr; margin-bottom:28px;">
+        <div class="chart-card">
+          <div class="chart-title">Top 15 Editoras</div>
+          <div class="chart-sub">Por número de livros lidos</div>
+          <div class="chart-wrap" style="height:380px">
+            <canvas id="chartEditorasBar"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Editoras ao Longo dos Anos</div>
+          <div class="chart-sub">Top 6 editoras por ano</div>
+          <div class="chart-wrap" style="height:380px">
+            <canvas id="chartEditorasAno"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ LIVROS VIEW ═══ -->
+    <div class="view" id="view-livros">
+      <div class="section-header">
+        <span class="section-title">Todos os Livros</span>
+        <span class="section-sub" id="livros-count">337 livros</span>
+      </div>
+
+      <div class="filter-tabs" id="year-filters">
+        <button class="filter-tab active" onclick="filterYear('all',this)">Todos</button>
+        <button class="filter-tab" onclick="filterYear('2019',this)">2019</button>
+        <button class="filter-tab" onclick="filterYear('2020',this)">2020</button>
+        <button class="filter-tab" onclick="filterYear('2021',this)">2021</button>
+        <button class="filter-tab" onclick="filterYear('2022',this)">2022</button>
+        <button class="filter-tab" onclick="filterYear('2023',this)">2023</button>
+        <button class="filter-tab" onclick="filterYear('2024',this)">2024</button>
+        <button class="filter-tab" onclick="filterYear('2025',this)">2025</button>
+      </div>
+
+      <div class="table-wrap table-scroll">
+        <div class="table-header-row">
+          <div class="th col-num">#</div>
+          <div class="th col-date" onclick="sortBy('date')">Data <span id="sort-date"></span></div>
+          <div class="th col-title" onclick="sortBy('title')">Título <span id="sort-title"></span></div>
+          <div class="th col-author" onclick="sortBy('author')">Autor <span id="sort-author"></span></div>
+          <div class="th col-genre">Gênero</div>
+          <div class="th col-lang">Idioma</div>
+          <div class="th col-pages" onclick="sortBy('pages')">Págs <span id="sort-pages"></span></div>
+          <div class="th col-year" onclick="sortBy('year')">Pub.</div>
+        </div>
+        <div id="books-tbody"></div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-box">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-orig" id="modal-orig"></div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+const BOOKS = 
+[{"id": 1, "date_read": "10/11/2019", "title": "Mais do que uma luz: Fanatismo e convivência", "author": "Amós Oz", "original_title": "More Than This", "year": 2014, "pages": 112, "publisher": "Companhia das Letras", "language": "Hebraico", "genre": "Crônicas"}, {"id": 2, "date_read": "11/11/2019", "title": "Amor e Solidão", "author": "André Comte-Sponville", "original_title": "De l'amour", "year": 2013, "pages": 128, "publisher": "Martins Fontes", "language": "Francês", "genre": "Filosofia"}, {"id": 3, "date_read": "13/11/2019", "title": "Liberdade Para Ser Livre", "author": "Hannah Arendt", "original_title": "Freedom to Be Free", "year": 2018, "pages": 64, "publisher": "Três Estrelas", "language": "Inglês", "genre": "Filosofia Política"}, {"id": 4, "date_read": "16/11/2019", "title": "No Jardim do Ogro", "author": "Leila Slimani", "original_title": "Dans le jardin de l'ogre", "year": 2017, "pages": 224, "publisher": "Tusquets", "language": "Francês", "genre": "Romance"}, {"id": 5, "date_read": "16/11/2019", "title": "Sobre a Estupidez", "author": "Robert Musil", "original_title": "Über die Dummheit", "year": 2011, "pages": 64, "publisher": "Antígona", "language": "Alemão", "genre": "Ensaio"}, {"id": 6, "date_read": "17/11/2019", "title": "Sobre o Exílio", "author": "Joseph Brodsky", "original_title": "Less Than One", "year": 2019, "pages": 80, "publisher": "Companhia das Letras", "language": "Inglês/Russo", "genre": "Ensaio"}, {"id": 7, "date_read": "18/11/2019", "title": "Sobre a Brevidade da Vida", "author": "Sêneca", "original_title": "De Brevitate Vitae", "year": 2017, "pages": 128, "publisher": "Penguin/Companhia", "language": "Latim", "genre": "Filosofia"}, {"id": 8, "date_read": "18/11/2019", "title": "Ver É Um Todo: Entrevistas e Conversas", "author": "Henri Cartier-Bresson", "original_title": "The Mind's Eye", "year": 2015, "pages": 176, "publisher": "Cosac Naify", "language": "Francês", "genre": "Fotografia/Arte"}, {"id": 9, "date_read": "19/11/2019", "title": "The Order of Time", "author": "Carlo Rovelli", "original_title": "L'ordine del tempo", "year": 2018, "pages": 240, "publisher": "Riverhead Books", "language": "Italiano", "genre": "Física/Ciência"}, {"id": 10, "date_read": "22/11/2019", "title": "Só Pode Ser Brincadeira, Sr. Feynman!", "author": "Richard Feynman", "original_title": "Surely You're Joking, Mr. Feynman!", "year": 2006, "pages": 350, "publisher": "Ediouro", "language": "Inglês", "genre": "Autobiografia/Ciência"}, {"id": 11, "date_read": "23/11/2019", "title": "A Vida Invisível de Eurídice Gusmão", "author": "Martha Batalha", "original_title": "", "year": 2016, "pages": 320, "publisher": "Companhia das Letras", "language": "Português", "genre": "Romance"}, {"id": 12, "date_read": "24/11/2019", "title": "Instruções Para Se Tornar um Fascista", "author": "Michela Murgia", "original_title": "Istruzioni per diventare fascisti", "year": 2019, "pages": 112, "publisher": "Bazar do Tempo", "language": "Italiano", "genre": "Política/Ensaio"}, {"id": 13, "date_read": "26/11/2019", "title": "A Desobediência Civil", "author": "Henry David Thoreau", "original_title": "Civil Disobedience", "year": 2012, "pages": 80, "publisher": "L&PM Pocket", "language": "Inglês", "genre": "Filosofia Política"}, {"id": 14, "date_read": "29/11/2019", "title": "Desire", "author": "Haruki Murakami", "original_title": "Desire", "year": 2017, "pages": 80, "publisher": "Knopf", "language": "Japonês", "genre": "Contos"}, {"id": 15, "date_read": "02/12/2019", "title": "A Insustentável Leveza do Ser", "author": "Milan Kundera", "original_title": "Nesnesitelná lehkost bytí", "year": 1984, "pages": 314, "publisher": "Companhia das Letras", "language": "Tcheco", "genre": "Romance"}, {"id": 16, "date_read": "03/12/2019", "title": "O Banquete", "author": "Platão", "original_title": "Symposium", "year": 2017, "pages": 128, "publisher": "Penguin/Companhia", "language": "Grego Antigo", "genre": "Filosofia"}, {"id": 17, "date_read": "07/12/2019", "title": "Sobre o Autoritarismo Brasileiro", "author": "Lilia Schwarcz", "original_title": "", "year": 2019, "pages": 200, "publisher": "Companhia das Letras", "language": "Português", "genre": "História/Política"}, {"id": 18, "date_read": "07/12/2019", "title": "Viagem à Rússia", "author": "Joseph Roth", "original_title": "Reise nach Russland", "year": 2012, "pages": 112, "publisher": "Companhia das Letras", "language": "Alemão", "genre": "Crônicas/Viagem"}, {"id": 19, "date_read": "09/12/2019", "title": "Boa Noite Amazona", "author": "Manoel Herzog", "original_title": "", "year": 2019, "pages": 256, "publisher": "Companhia das Letras", "language": "Português", "genre": "Crônicas"}, {"id": 20, "date_read": "16/12/2019", "title": "O Capitalismo É Moral?", "author": "André Comte-Sponville", "original_title": "Le capitalisme est-il moral?", "year": 2005, "pages": 192, "publisher": "Martins Fontes", "language": "Francês", "genre": "Filosofia/Economia"}, {"id": 21, "date_read": "19/12/2019", "title": "Marrom e Amarelo", "author": "Paulo Scott", "original_title": "", "year": 2019, "pages": 200, "publisher": "Alfaguara", "language": "Português", "genre": "Romance"}, {"id": 22, "date_read": "21/12/2019", "title": "Mil Sóis", "author": "Primo Levi", "original_title": "", "year": 2018, "pages": 128, "publisher": "Âyiné", "language": "Italiano", "genre": "Poesia"}, {"id": 23, "date_read": "23/12/2019", "title": "O Pai da Menina Morta", "author": "Thiago Ferro", "original_title": "", "year": 2019, "pages": 176, "publisher": "Todavia", "language": "Português", "genre": "Romance"}, {"id": 24, "date_read": "29/12/2019", "title": "Canção Suave", "author": "Leila Slimani", "original_title": "Chanson douce", "year": 2018, "pages": 240, "publisher": "Tusquets", "language": "Francês", "genre": "Romance"}, {"id": 25, "date_read": "26/12/2019", "title": "A Ordem do Dia", "author": "Éric Vuillard", "original_title": "L'Ordre du jour", "year": 2018, "pages": 128, "publisher": "Âyiné", "language": "Francês", "genre": "Ficção Histórica"}, {"id": 26, "date_read": "29/12/2019", "title": "Ação em Busca da Felicidade", "author": "Hannah Arendt", "original_title": "The Pursuit of Happiness", "year": 2018, "pages": 96, "publisher": "Bazar do Tempo", "language": "Inglês", "genre": "Filosofia Política"}, {"id": 27, "date_read": "30/12/2019", "title": "Hamlet", "author": "William Shakespeare", "original_title": "Hamlet", "year": 1603, "pages": 180, "publisher": "Penguin/Companhia", "language": "Inglês", "genre": "Teatro"}, {"id": 28, "date_read": "31/12/2019", "title": "Contra o Colonialismo", "author": "Simone Weil", "original_title": "", "year": 2019, "pages": 96, "publisher": "Âyiné", "language": "Francês", "genre": "Política/Ensaio"}, {"id": 29, "date_read": "06/01/2020", "title": "Terror e Modernidade", "author": "Donatella Di Cesare", "original_title": "Terrore e modernità", "year": 2019, "pages": 192, "publisher": "Âyiné", "language": "Italiano", "genre": "Filosofia Política"}, {"id": 30, "date_read": "07/01/2020", "title": "Uma Lei Para a História", "author": "Simone Veil", "original_title": "Une loi pour l'histoire", "year": 2019, "pages": 64, "publisher": "Âyiné", "language": "Francês", "genre": "Filosofia/História"}, {"id": 31, "date_read": "08/01/2020", "title": "Sumchi: Uma fábula de amor e aventura", "author": "Amós Oz", "original_title": "Sumchi", "year": 2019, "pages": 128, "publisher": "Companhia das Letras", "language": "Hebraico", "genre": "Memórias"}, {"id": 32, "date_read": "11/01/2020", "title": "Talking to Strangers", "author": "Malcolm Gladwell", "original_title": "Talking to Strangers", "year": 2019, "pages": 386, "publisher": "Little, Brown", "language": "Inglês", "genre": "Jornalismo/Psicologia"}, {"id": 33, "date_read": "13/01/2020", "title": "A Sociedade do Cansaço", "author": "Byung-Chul Han", "original_title": "Müdigkeitsgesellschaft", "year": 2015, "pages": 80, "publisher": "Vozes", "language": "Alemão", "genre": "Filosofia"}, {"id": 34, "date_read": "14/01/2020", "title": "Como Curar um Fanático", "author": "Amós Oz", "original_title": "Help Us to Divorce", "year": 2015, "pages": 80, "publisher": "Companhia das Letras", "language": "Hebraico", "genre": "Ensaio Político"}, {"id": 35, "date_read": "15/01/2020", "title": "A Ridícula Ideia de Não Te Ver Mais", "author": "Rosa Montero", "original_title": "La ridícula idea de no volverte a ver", "year": 2018, "pages": 176, "publisher": "Alfaguara", "language": "Espanhol", "genre": "Memórias/Ensaio"}, {"id": 36, "date_read": "16/01/2020", "title": "O Poder do Sim", "author": "David Hart", "original_title": "", "year": 2019, "pages": 256, "publisher": "", "language": "Português", "genre": "Autoajuda"}, {"id": 37, "date_read": "18/01/2020", "title": "As Perguntas", "author": "Antônio Xerxenesky", "original_title": "", "year": 2019, "pages": 192, "publisher": "Record", "language": "Português", "genre": "Romance"}, {"id": 38, "date_read": "19/01/2020", "title": "É Isto Um Homem?", "author": "Primo Levi", "original_title": "Se questo è un uomo", "year": 1988, "pages": 224, "publisher": "Rocco", "language": "Italiano", "genre": "Memórias/Testemunho"}, {"id": 39, "date_read": "22/01/2020", "title": "F.", "author": "Antônio Xerxenesky", "original_title": "", "year": 2016, "pages": 192, "publisher": "Record", "language": "Português", "genre": "Romance"}, {"id": 40, "date_read": "22/01/2020", "title": "Novo Esclarecimento Radical", "author": "Marina Garcés", "original_title": "Nova il·lustració radical", "year": 2020, "pages": 128, "publisher": "n-1 edições", "language": "Catalão/Espanhol", "genre": "Filosofia"}, {"id": 41, "date_read": "29/01/2020", "title": "Pró ou Contra a Bomba Atômica", "author": "Elsa Morante", "original_title": "Pro o contro la bomba atomica", "year": 2019, "pages": 96, "publisher": "Âyiné", "language": "Italiano", "genre": "Ensaio"}, {"id": 42, "date_read": "29/01/2020", "title": "Walking Dead Vol. 32: Rest in Peace", "author": "Robert Kirkman", "original_title": "The Walking Dead Vol. 32", "year": 2019, "pages": 160, "publisher": "Image Comics", "language": "Inglês", "genre": "Quadrinhos/Terror"}, {"id": 43, "date_read": "01/02/2020", "title": "Italian Night", "author": "Ödön von Horváth", "original_title": "Italienische Nacht", "year": 1931, "pages": 96, "publisher": "", "language": "Alemão", "genre": "Teatro"}, {"id": 44, "date_read": "23/02/2020", "title": "Matéria Escura", "author": "Blake Crouch", "original_title": "Dark Matter", "year": 2017, "pages": 352, "publisher": "Intrínseca", "language": "Inglês", "genre": "Ficção Científica/Thriller"}, {"id": 45, "date_read": "02/03/2020", "title": "Videogame: A Evolução da Arte", "author": "João Vareza", "original_title": "", "year": 2019, "pages": 256, "publisher": "", "language": "Português", "genre": "Arte/Tecnologia"}, {"id": 46, "date_read": "08/03/2020", "title": "Ética do Amor Livre", "author": "Janet Hardy, Dossie Easton", "original_title": "The Ethical Slut", "year": 2019, "pages": 320, "publisher": "Expressa", "language": "Inglês", "genre": "Relacionamentos"}, {"id": 47, "date_read": "10/04/2020", "title": "Sonhos do Terceiro Reich", "author": "Charlotte Beradt", "original_title": "Das Dritte Reich des Traums", "year": 2017, "pages": 192, "publisher": "Três Estrelas", "language": "Alemão", "genre": "História/Psicologia"}, {"id": 48, "date_read": "12/04/2020", "title": "Argonautas", "author": "Maggie Nelson", "original_title": "The Argonauts", "year": 2016, "pages": 176, "publisher": "n-1 edições", "language": "Inglês", "genre": "Memórias/Teoria"}, {"id": 49, "date_read": "13/04/2020", "title": "Memórias de um Editor", "author": "Kurt Wolff", "original_title": "Autoren, Bücher, Abenteuer", "year": 2019, "pages": 256, "publisher": "Âyiné", "language": "Alemão", "genre": "Memórias"}, {"id": 50, "date_read": "17/04/2020", "title": "A Realidade Não É O Que Parece", "author": "Carlo Rovelli", "original_title": "La realtà non è come ci appare", "year": 2017, "pages": 272, "publisher": "Objetiva", "language": "Italiano", "genre": "Física/Ciência"}, {"id": 51, "date_read": "20/04/2020", "title": "Ratos e Homens", "author": "John Steinbeck", "original_title": "Of Mice and Men", "year": 1937, "pages": 112, "publisher": "L&PM Pocket", "language": "Inglês", "genre": "Romance"}, {"id": 52, "date_read": "28/04/2020", "title": "Direita e Esquerda na Literatura", "author": "Alfonso Berardinelli", "original_title": "", "year": 2019, "pages": 160, "publisher": "Âyiné", "language": "Italiano", "genre": "Crítica Literária"}, {"id": 53, "date_read": "29/04/2020", "title": "Cartas a um Jovem Poeta", "author": "Rainer Maria Rilke", "original_title": "Briefe an einen jungen Dichter", "year": 2017, "pages": 96, "publisher": "L&PM Pocket", "language": "Alemão", "genre": "Cartas/Literatura"}, {"id": 54, "date_read": "01/05/2020", "title": "Um Outro Brooklyn", "author": "Jacqueline Woodson", "original_title": "Another Brooklyn", "year": 2017, "pages": 176, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Romance"}, {"id": 55, "date_read": "01/05/2020", "title": "The Bed of Procrustes", "author": "Nassim Nicholas Taleb", "original_title": "The Bed of Procrustes", "year": 2010, "pages": 160, "publisher": "Random House", "language": "Inglês", "genre": "Filosofia/Aforismos"}, {"id": 56, "date_read": "03/05/2020", "title": "Praça dos Heróis", "author": "Thomas Bernhard", "original_title": "Heldenplatz", "year": 2019, "pages": 128, "publisher": "Âyiné", "language": "Alemão", "genre": "Teatro"}, {"id": 57, "date_read": "13/05/2020", "title": "Se Deus Chamar Não Vou", "author": "Mariana Carrara", "original_title": "", "year": 2019, "pages": 192, "publisher": "", "language": "Português", "genre": "Romance"}, {"id": 58, "date_read": "16/05/2020", "title": "Estado de Sítio", "author": "Albert Camus", "original_title": "L'État de siège", "year": 2018, "pages": 128, "publisher": "Record", "language": "Francês", "genre": "Teatro"}, {"id": 59, "date_read": "24/05/2020", "title": "Pela Bandeira do Paraíso", "author": "Jon Krakauer", "original_title": "Under the Banner of Heaven", "year": 2003, "pages": 372, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Jornalismo/Religião"}, {"id": 60, "date_read": "28/05/2020", "title": "Sete Breves Lições de Física", "author": "Carlo Rovelli", "original_title": "Sette brevi lezioni di fisica", "year": 2015, "pages": 96, "publisher": "Objetiva", "language": "Italiano", "genre": "Física/Ciência"}, {"id": 61, "date_read": "28/05/2020", "title": "Migração e Intolerância", "author": "Umberto Eco", "original_title": "Migrazioni e intolleranza", "year": 2018, "pages": 80, "publisher": "Record", "language": "Italiano", "genre": "Ensaio"}, {"id": 62, "date_read": "29/05/2020", "title": "Amazona", "author": "Sérgio Sant'Anna", "original_title": "", "year": 2019, "pages": 176, "publisher": "Companhia das Letras", "language": "Português", "genre": "Romance"}, {"id": 63, "date_read": "05/06/2020", "title": "Classic Krakauer", "author": "Jon Krakauer", "original_title": "Classic Krakauer", "year": 2018, "pages": 352, "publisher": "Doubleday", "language": "Inglês", "genre": "Jornalismo/Aventura"}, {"id": 64, "date_read": "11/06/2020", "title": "A Vida Pela Frente", "author": "Romain Gary (Émile Ajar)", "original_title": "La Vie devant soi", "year": 2018, "pages": 224, "publisher": "Alfaguara", "language": "Francês", "genre": "Romance"}, {"id": 65, "date_read": "13/06/2020", "title": "A Casa", "author": "Chico Felitti", "original_title": "", "year": 2020, "pages": 288, "publisher": "Companhia das Letras", "language": "Português", "genre": "Jornalismo"}, {"id": 66, "date_read": "18/06/2020", "title": "Paris, Capitale du XIXe Siècle", "author": "Walter Benjamin", "original_title": "Das Passagen-Werk", "year": 1989, "pages": 972, "publisher": "Cerf", "language": "Alemão/Francês", "genre": "Filosofia/História"}, {"id": 67, "date_read": "23/06/2020", "title": "Sangue e Champanhe: A Vida de Robert Capa", "author": "Alex Kershaw", "original_title": "Blood and Champagne", "year": 2002, "pages": 320, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Biografia"}, {"id": 68, "date_read": "28/06/2020", "title": "Carta Sobre a Felicidade (A Meneceu)", "author": "Epicuro", "original_title": "Epistula ad Menoeceum", "year": 2019, "pages": 64, "publisher": "Penguin/Companhia", "language": "Grego Antigo", "genre": "Filosofia"}, {"id": 69, "date_read": "29/06/2020", "title": "30 Instruções para os Criados", "author": "Jonathan Swift", "original_title": "Directions to Servants", "year": 2013, "pages": 128, "publisher": "Hedra", "language": "Inglês", "genre": "Sátira"}, {"id": 70, "date_read": "03/07/2020", "title": "The Mind of a Mnemonist", "author": "A.R. Luria", "original_title": "Маленькая книжка о большой памяти", "year": 1968, "pages": 160, "publisher": "Harvard University Press", "language": "Russo", "genre": "Psicologia/Ciência"}, {"id": 71, "date_read": "20/07/2020", "title": "Tornar-se Palestina", "author": "Lina Meruane", "original_title": "Volverse Palestina", "year": 2014, "pages": 128, "publisher": "Cosac Naify", "language": "Espanhol", "genre": "Memórias/Política"}, {"id": 72, "date_read": "11/07/2020", "title": "Why Bob Dylan Matters", "author": "Richard F. Thomas", "original_title": "Why Bob Dylan Matters", "year": 2017, "pages": 352, "publisher": "Dey Street Books", "language": "Inglês", "genre": "Música/Crítica"}, {"id": 73, "date_read": "24/07/2020", "title": "Grama", "author": "Keum Suk Gendry-Kim", "original_title": "잔디", "year": 2019, "pages": 480, "publisher": "Veneta", "language": "Coreano", "genre": "Quadrinhos/História"}, {"id": 74, "date_read": "09/08/2020", "title": "Bob Dylan: The Essential Interviews", "author": "Jonathan Cott (ed.)", "original_title": "Bob Dylan: The Essential Interviews", "year": 2006, "pages": 448, "publisher": "Wenner Books", "language": "Inglês", "genre": "Música/Entrevistas"}, {"id": 75, "date_read": "13/08/2020", "title": "Proust Contra a Degradação", "author": "Józefa Czapski", "original_title": "Proust contre la déchéance", "year": 2019, "pages": 128, "publisher": "Âyiné", "language": "Polonês/Francês", "genre": "Literatura/Ensaio"}, {"id": 76, "date_read": "15/08/2020", "title": "Like a Rolling Stone: Bob Dylan at the Crossroads", "author": "Greil Marcus", "original_title": "Like a Rolling Stone", "year": 2005, "pages": 272, "publisher": "PublicAffairs", "language": "Inglês", "genre": "Música/Cultura"}, {"id": 77, "date_read": "16/08/2020", "title": "Entre o Mundo e Eu", "author": "Ta-Nehisi Coates", "original_title": "Between the World and Me", "year": 2015, "pages": 176, "publisher": "Objetiva", "language": "Inglês", "genre": "Ensaio/Memórias"}, {"id": 78, "date_read": "23/08/2020", "title": "O Avesso da Pele", "author": "Jefferson Tenório", "original_title": "", "year": 2020, "pages": 176, "publisher": "Companhia das Letras", "language": "Português", "genre": "Romance"}, {"id": 79, "date_read": "25/08/2020", "title": "Dark Days", "author": "James Baldwin", "original_title": "Dark Days", "year": 2018, "pages": 80, "publisher": "Penguin Modern", "language": "Inglês", "genre": "Ensaio"}, {"id": 80, "date_read": "01/09/2020", "title": "O Mercador de Veneza", "author": "William Shakespeare", "original_title": "The Merchant of Venice", "year": 1600, "pages": 128, "publisher": "Penguin/Companhia", "language": "Inglês", "genre": "Teatro"}, {"id": 81, "date_read": "13/09/2020", "title": "The Fire Next Time", "author": "James Baldwin", "original_title": "The Fire Next Time", "year": 1963, "pages": 128, "publisher": "Vintage", "language": "Inglês", "genre": "Ensaio/Memórias"}, {"id": 82, "date_read": "13/09/2020", "title": "A Uruguaia", "author": "Pedro Mairal", "original_title": "La uruguaya", "year": 2018, "pages": 168, "publisher": "Todavia", "language": "Espanhol", "genre": "Romance"}, {"id": 83, "date_read": "15/09/2020", "title": "Para Educar Crianças Feministas", "author": "Chimamanda Ngozi Adichie", "original_title": "Dear Ijeawele", "year": 2017, "pages": 80, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Feminismo/Ensaio"}, {"id": 84, "date_read": "17/09/2020", "title": "Contra os Filhos", "author": "Lina Meruane", "original_title": "Contra los hijos", "year": 2018, "pages": 128, "publisher": "n-1 edições", "language": "Espanhol", "genre": "Ensaio"}, {"id": 85, "date_read": "26/09/2020", "title": "A Alma Boa de Setsuan", "author": "Bertolt Brecht", "original_title": "Der gute Mensch von Sezuan", "year": 1943, "pages": 128, "publisher": "Paz e Terra", "language": "Alemão", "genre": "Teatro"}, {"id": 86, "date_read": "28/09/2020", "title": "Os Engenheiros do Caos", "author": "Giuliano da Empoli", "original_title": "Gli ingegneri del caos", "year": 2020, "pages": 224, "publisher": "Vestígio", "language": "Italiano", "genre": "Política/Ensaio"}, {"id": 87, "date_read": "03/10/2020", "title": "Eu, Ota, Rio de Hiroshima: A história de um japonês que virou brasileiro", "author": "Marcos Urup", "original_title": "", "year": 2020, "pages": 176, "publisher": "Temporal Editora", "language": "Português", "genre": "Memórias"}, {"id": 88, "date_read": "10/10/2020", "title": "Lugar Nenhum", "author": "Sérgio Carvalho", "original_title": "", "year": 2020, "pages": 192, "publisher": "", "language": "Português", "genre": "Teatro"}, {"id": 89, "date_read": "19/10/2020", "title": "Hoje Vamos Desenhar a Morte", "author": "Wojciech Tochman", "original_title": "Dzisiaj narysujemy śmierć", "year": 2018, "pages": 192, "publisher": "Âyiné", "language": "Polonês", "genre": "Jornalismo/Reportagem"}, {"id": 90, "date_read": "21/10/2020", "title": "A Política do Impossível", "author": "Stig Dagerman", "original_title": "", "year": 2020, "pages": 128, "publisher": "Âyiné", "language": "Sueco", "genre": "Política/Ensaio"}, {"id": 91, "date_read": "26/10/2020", "title": "A Mina de Ouro", "author": "Maria José Dupré", "original_title": "", "year": 1943, "pages": 200, "publisher": "Ática", "language": "Português", "genre": "Literatura Brasileira"}, {"id": 92, "date_read": "28/10/2020", "title": "Os Melhores Textos de Richard P. Feynman", "author": "Richard Feynman", "original_title": "The Pleasure of Finding Things Out", "year": 2000, "pages": 288, "publisher": "Ediouro", "language": "Inglês", "genre": "Ciência/Ensaio"}, {"id": 93, "date_read": "24/11/2020", "title": "O Pequeno Tratado das Grandes Virtudes", "author": "André Comte-Sponville", "original_title": "Petit traité des grandes vertus", "year": 1999, "pages": 384, "publisher": "Martins Fontes", "language": "Francês", "genre": "Filosofia/Ética"}, {"id": 94, "date_read": "27/11/2020", "title": "Os Homens Explicam Tudo Para Mim", "author": "Rebecca Solnit", "original_title": "Men Explain Things to Me", "year": 2017, "pages": 160, "publisher": "Culter", "language": "Inglês", "genre": "Feminismo/Ensaio"}, {"id": 95, "date_read": "29/11/2020", "title": "O Perigo de Uma História Única", "author": "Chimamanda Ngozi Adichie", "original_title": "The Danger of a Single Story", "year": 2019, "pages": 64, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Ensaio"}, {"id": 96, "date_read": "04/12/2020", "title": "The Trouble with Testosterone", "author": "Robert Sapolsky", "original_title": "The Trouble with Testosterone", "year": 1997, "pages": 304, "publisher": "Scribner", "language": "Inglês", "genre": "Biologia/Ciência"}, {"id": 97, "date_read": "08/12/2020", "title": "A Origem dos Outros", "author": "Toni Morrison", "original_title": "The Origin of Others", "year": 2019, "pages": 128, "publisher": "Objetiva", "language": "Inglês", "genre": "Ensaio/Raça"}, {"id": 98, "date_read": "14/12/2020", "title": "Blues do Fim dos Tempos", "author": "Ian McEwan", "original_title": "The Cockroach", "year": 2019, "pages": 128, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Sátira Política"}, {"id": 99, "date_read": "21/12/2020", "title": "O Melhor Que Podíamos Fazer", "author": "Thi Bui", "original_title": "The Best We Could Do", "year": 2018, "pages": 336, "publisher": "Veneta", "language": "Inglês", "genre": "Quadrinhos/Memórias"}, {"id": 100, "date_read": "22/12/2020", "title": "A Organização", "author": "Malu Gaspar", "original_title": "", "year": 2020, "pages": 288, "publisher": "Companhia das Letras", "language": "Português", "genre": "Jornalismo"}, {"id": 101, "date_read": "26/12/2020", "title": "Uma Noite com Sabrina Love", "author": "Pedro Mairal", "original_title": "Una noche con Sabrina Love", "year": 2020, "pages": 192, "publisher": "Todavia", "language": "Espanhol", "genre": "Romance"}, {"id": 102, "date_read": "30/12/2020", "title": "Sagarana", "author": "João Guimarães Rosa", "original_title": "", "year": 1946, "pages": 352, "publisher": "Nova Fronteira", "language": "Português", "genre": "Contos"}, {"id": 103, "date_read": "04/01/2021", "title": "Crônicas da Travessia", "author": "Paul B. Preciado", "original_title": "An Apartment on Uranus", "year": 2021, "pages": 320, "publisher": "n-1 edições", "language": "Francês", "genre": "Teoria/Memórias"}, {"id": 104, "date_read": "10/01/2021", "title": "Crítica da Vítima", "author": "Daniele Giglioli", "original_title": "Critica della vittima", "year": 2020, "pages": 128, "publisher": "Âyiné", "language": "Italiano", "genre": "Filosofia/Ensaio"}, {"id": 105, "date_read": "13/01/2021", "title": "O Peso e a Graça", "author": "Simone Weil", "original_title": "La Pesanteur et la Grâce", "year": 2004, "pages": 176, "publisher": "Âyiné", "language": "Francês", "genre": "Filosofia/Espiritualidade"}, {"id": 106, "date_read": "16/01/2021", "title": "Um Inimigo do Povo", "author": "Henrik Ibsen", "original_title": "En folkefiende", "year": 1882, "pages": 144, "publisher": "L&PM Pocket", "language": "Norueguês", "genre": "Teatro"}, {"id": 107, "date_read": "24/01/2021", "title": "Lições de Felicidade", "author": "Ilaria Gaspari", "original_title": "Lezioni di felicità", "year": 2021, "pages": 224, "publisher": "Âyiné", "language": "Italiano", "genre": "Filosofia"}, {"id": 108, "date_read": "26/01/2021", "title": "Esboço", "author": "Rachel Cusk", "original_title": "Outline", "year": 2018, "pages": 256, "publisher": "Âyiné", "language": "Inglês", "genre": "Romance"}, {"id": 109, "date_read": "01/02/2021", "title": "Baratas", "author": "Scholastique Mukasonga", "original_title": "Inyenzi ou les cafards", "year": 2021, "pages": 192, "publisher": "Âyiné", "language": "Francês", "genre": "Memórias/Ruanda"}, {"id": 110, "date_read": "09/02/2021", "title": "Corpo Vazio", "author": "Natalia Timerman", "original_title": "", "year": 2021, "pages": 176, "publisher": "Todavia", "language": "Português", "genre": "Romance"}, {"id": 111, "date_read": "18/04/2021", "title": "Trilogia do Reencontro", "author": "Botho Strauss", "original_title": "Trilogie des Wiedersehens", "year": 1977, "pages": 128, "publisher": "", "language": "Alemão", "genre": "Teatro"}, {"id": 112, "date_read": "21/02/2021", "title": "Traço de Giz", "author": "Miguelânxo Prado", "original_title": "Trazo de tiza", "year": 1993, "pages": 128, "publisher": "Conrad", "language": "Galego", "genre": "Quadrinhos"}, {"id": 113, "date_read": "07/03/2021", "title": "Behave", "author": "Robert Sapolsky", "original_title": "Behave", "year": 2018, "pages": 790, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Neurociência/Ciência"}, {"id": 114, "date_read": "08/03/2021", "title": "Van Gogh: A Salvação Pela Pintura", "author": "Rodrigo Naves", "original_title": "", "year": 2020, "pages": 192, "publisher": "Âyiné", "language": "Português", "genre": "Arte/Crítica"}, {"id": 115, "date_read": "09/03/2021", "title": "Desvio", "author": "Juan Francisco Moretti", "original_title": "", "year": 2021, "pages": 160, "publisher": "Âyiné", "language": "Espanhol", "genre": "Romance"}, {"id": 116, "date_read": "14/03/2021", "title": "Contra as Eleições", "author": "David Van Reybrouck", "original_title": "Tegen verkiezingen", "year": 2018, "pages": 192, "publisher": "Âyiné", "language": "Holandês", "genre": "Política/Democracia"}, {"id": 117, "date_read": "13/03/2021", "title": "O Anel de Giges", "author": "Eduardo Giannetti", "original_title": "", "year": 2020, "pages": 256, "publisher": "Companhia das Letras", "language": "Português", "genre": "Filosofia"}, {"id": 118, "date_read": "19/03/2021", "title": "Meu Mundo Versus Marta", "author": "Rafael Sica, Paulo Scott", "original_title": "", "year": 2021, "pages": 128, "publisher": "", "language": "Português", "genre": "Crônicas/Esporte"}, {"id": 119, "date_read": "24/03/2021", "title": "The Old Guard Vol. 1", "author": "Greg Rucka, Leandro Fernandez", "original_title": "The Old Guard Book One: Opening Fire", "year": 2017, "pages": 136, "publisher": "Image Comics", "language": "Inglês", "genre": "Quadrinhos/Ação"}, {"id": 120, "date_read": "04/04/2021", "title": "Na Natureza Selvagem", "author": "Jon Krakauer", "original_title": "Into the Wild", "year": 1996, "pages": 272, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Jornalismo/Aventura"}, {"id": 121, "date_read": "02/04/2021", "title": "Vista Chinesa", "author": "Tatiana Salem Levy", "original_title": "", "year": 2021, "pages": 176, "publisher": "Companhia das Letras", "language": "Português", "genre": "Romance"}, {"id": 122, "date_read": "13/03/2021", "title": "Vida à Venda", "author": "Yukio Mishima", "original_title": "命売ります", "year": 2016, "pages": 192, "publisher": "Estação Liberdade", "language": "Japonês", "genre": "Romance"}, {"id": 123, "date_read": "19/04/2021", "title": "A Linguagem do Terceiro Reich", "author": "Victor Klemperer", "original_title": "LTI – Lingua Tertii Imperii", "year": 2009, "pages": 352, "publisher": "Contraponto", "language": "Alemão", "genre": "Linguística/História"}, {"id": 124, "date_read": "20/03/2021", "title": "The Old Guard Vol. 2", "author": "Greg Rucka et al.", "original_title": "The Old Guard Book Two: Force Multiplied", "year": 2020, "pages": 168, "publisher": "Image Comics", "language": "Inglês", "genre": "Quadrinhos/Ação"}, {"id": 125, "date_read": "22/03/2021", "title": "Three Cups of Deceit", "author": "Jon Krakauer", "original_title": "Three Cups of Deceit", "year": 2011, "pages": 112, "publisher": "Anchor Books", "language": "Inglês", "genre": "Jornalismo"}, {"id": 126, "date_read": "23/03/2021", "title": "A Agonia do Eros", "author": "Byung-Chul Han", "original_title": "Agonie des Eros", "year": 2017, "pages": 80, "publisher": "Vozes", "language": "Alemão", "genre": "Filosofia"}, {"id": 127, "date_read": "04/05/2021", "title": "Viver Entre Línguas", "author": "Sylvia Molloy", "original_title": "Vivir entre lenguas", "year": 2016, "pages": 128, "publisher": "n-1 edições", "language": "Espanhol", "genre": "Ensaio/Memórias"}, {"id": 128, "date_read": "15/05/2021", "title": "Seis Propostas Para o Próximo Milênio", "author": "Italo Calvino", "original_title": "Lezioni americane", "year": 1990, "pages": 160, "publisher": "Companhia das Letras", "language": "Italiano", "genre": "Literatura/Ensaio"}, {"id": 129, "date_read": "31/05/2021", "title": "Contra o Ódio", "author": "Carolin Emcke", "original_title": "Gegen den Hass", "year": 2020, "pages": 224, "publisher": "Companhia das Letras", "language": "Alemão", "genre": "Política/Ensaio"}, {"id": 130, "date_read": "05/06/2021", "title": "A Arte de Pensar", "author": "Paul Valéry", "original_title": "Introduction à la méthode de Léonard de Vinci", "year": 2019, "pages": 96, "publisher": "Âyiné", "language": "Francês", "genre": "Filosofia/Arte"}, {"id": 131, "date_read": "03/07/2021", "title": "Arendt: Uma Biografia", "author": "Ann Heberlein", "original_title": "Hannah Arendt", "year": 2020, "pages": 176, "publisher": "Âyiné", "language": "Sueco", "genre": "Biografia"}, {"id": 132, "date_read": "09/07/2021", "title": "Black Hole Survival Guide", "author": "Janna Levin", "original_title": "Black Hole Survival Guide", "year": 2020, "pages": 176, "publisher": "Knopf", "language": "Inglês", "genre": "Astronomia/Ciência"}, {"id": 133, "date_read": "15/07/2021", "title": "Helgoland", "author": "Carlo Rovelli", "original_title": "Helgoland", "year": 2021, "pages": 208, "publisher": "Objetiva", "language": "Italiano", "genre": "Física/Ciência"}, {"id": 134, "date_read": "27/07/2021", "title": "O Cometa", "author": "W.E.B. Du Bois", "original_title": "The Comet", "year": 1920, "pages": 64, "publisher": "n-1 edições", "language": "Inglês", "genre": "Ficção Científica/Raça"}, {"id": 135, "date_read": "28/07/2021", "title": "Why Zebras Don't Get Ulcers", "author": "Robert Sapolsky", "original_title": "Why Zebras Don't Get Ulcers", "year": 2004, "pages": 560, "publisher": "Holt Paperbacks", "language": "Inglês", "genre": "Biologia/Estresse"}, {"id": 136, "date_read": "30/07/2021", "title": "Kentukis", "author": "Samanta Schweblin", "original_title": "Kentukis", "year": 2020, "pages": 192, "publisher": "Alfaguara", "language": "Espanhol", "genre": "Romance/Tecnologia"}, {"id": 137, "date_read": "15/08/2021", "title": "Em Defesa da Solidariedade Aberta", "author": "George Soros", "original_title": "In Defense of Open Society", "year": 2020, "pages": 224, "publisher": "Âyiné", "language": "Inglês", "genre": "Política/Economia"}, {"id": 138, "date_read": "24/09/2021", "title": "Encaixotando Minha Biblioteca", "author": "Alberto Manguel", "original_title": "Packing My Library", "year": 2019, "pages": 128, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Literatura/Memórias"}, {"id": 139, "date_read": "25/08/2021", "title": "Murambi: Livro das Ossadas", "author": "Boubacar Boris Diop", "original_title": "Murambi, le livre des ossements", "year": 2020, "pages": 192, "publisher": "n-1 edições", "language": "Francês", "genre": "Romance/Ruanda"}, {"id": 140, "date_read": "09/09/2021", "title": "Que Foram Fazer os Intelectuais", "author": "Enzo Traverso", "original_title": "Les nouveaux visages du fascisme", "year": 2020, "pages": 192, "publisher": "Veneta", "language": "Italiano/Francês", "genre": "Política/Ensaio"}, {"id": 141, "date_read": "10/09/2021", "title": "O Deus da Carnificina", "author": "Yasmina Reza", "original_title": "Le Dieu du carnage", "year": 2008, "pages": 80, "publisher": "Record", "language": "Francês", "genre": "Teatro"}, {"id": 142, "date_read": "13/09/2021", "title": "Edificar-se Para a Morte", "author": "Sêneca", "original_title": "Epistulae Morales ad Lucilium", "year": 2020, "pages": 96, "publisher": "Penguin/Companhia", "language": "Latim", "genre": "Filosofia"}, {"id": 143, "date_read": "15/09/2021", "title": "O Vento Mudou de Direção", "author": "Simone Duarte", "original_title": "", "year": 2021, "pages": 176, "publisher": "Setembro Editorial", "language": "Português", "genre": "Romance"}, {"id": 144, "date_read": "16/09/2021", "title": "A Matemática e a Política", "author": "Chiara Valerio", "original_title": "La matematica è politica", "year": 2020, "pages": 128, "publisher": "Âyiné", "language": "Italiano", "genre": "Matemática/Política"}, {"id": 145, "date_read": "21/09/2021", "title": "Tangências", "author": "Miguelânxo Prado", "original_title": "Tangencias", "year": 2006, "pages": 128, "publisher": "", "language": "Galego", "genre": "Quadrinhos"}, {"id": 146, "date_read": "02/10/2021", "title": "A Espera", "author": "Keum Suk Gendry-Kim", "original_title": "대기", "year": 2021, "pages": 160, "publisher": "Veneta", "language": "Coreano", "genre": "Quadrinhos"}, {"id": 147, "date_read": "06/10/2021", "title": "Notas Para Uma Definição do Leitor Ideal", "author": "Alberto Manguel", "original_title": "", "year": 2021, "pages": 128, "publisher": "Companhia das Letras", "language": "Inglês/Espanhol", "genre": "Literatura/Ensaio"}, {"id": 148, "date_read": "08/10/2021", "title": "O Livro do Xadrez", "author": "Stefan Zweig", "original_title": "Schachnovelle", "year": 1942, "pages": 96, "publisher": "L&PM Pocket", "language": "Alemão", "genre": "Novela"}, {"id": 149, "date_read": "10/10/2021", "title": "Escute as Feras", "author": "Nastassja Martin", "original_title": "Croire aux fauves", "year": 2021, "pages": 128, "publisher": "n-1 edições", "language": "Francês", "genre": "Memórias/Antropologia"}, {"id": 150, "date_read": "26/10/2021", "title": "Salvatierra", "author": "Pedro Mairal", "original_title": "Salvatierra", "year": 2021, "pages": 144, "publisher": "Todavia", "language": "Espanhol", "genre": "Romance"}, {"id": 151, "date_read": "31/10/2021", "title": "Dias Ensolarados no Paraíso", "author": "Brazilino Lacerda", "original_title": "", "year": 2021, "pages": 192, "publisher": "", "language": "Português", "genre": "Romance"}, {"id": 152, "date_read": "02/11/2021", "title": "Retorno ao Admirável Mundo Novo", "author": "Aldous Huxley", "original_title": "Brave New World Revisited", "year": 2014, "pages": 128, "publisher": "Globo", "language": "Inglês", "genre": "Ensaio/Ficção Científica"}, {"id": 153, "date_read": "09/11/2021", "title": "A Pediatra", "author": "Andrea Del Fuego", "original_title": "", "year": 2021, "pages": 192, "publisher": "Companhia das Letras", "language": "Português", "genre": "Romance"}, {"id": 154, "date_read": "20/11/2021", "title": "Até o Fim do Tempo", "author": "Brian Greene", "original_title": "Until the End of Time", "year": 2021, "pages": 464, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Física/Cosmologia"}, {"id": 155, "date_read": "22/11/2021", "title": "Como Vejo o Mundo", "author": "Albert Einstein", "original_title": "Mein Weltbild", "year": 2021, "pages": 240, "publisher": "Nova Fronteira", "language": "Alemão", "genre": "Ciência/Filosofia"}, {"id": 156, "date_read": "03/12/2021", "title": "O Único Avião no Céu", "author": "Garrett M. Graff", "original_title": "The Only Plane in the Sky", "year": 2021, "pages": 512, "publisher": "Intrínseca", "language": "Inglês", "genre": "História/11 de Setembro"}, {"id": 157, "date_read": "15/12/2021", "title": "Este Não É Seu Lar", "author": "Natasha Brown", "original_title": "Assembly", "year": 2022, "pages": 128, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Romance"}, {"id": 158, "date_read": "16/12/2021", "title": "Unguarded", "author": "Scottie Pippen", "original_title": "Unguarded", "year": 2021, "pages": 304, "publisher": "Atria Books", "language": "Inglês", "genre": "Autobiografia/Esporte"}, {"id": 159, "date_read": "27/12/2021", "title": "Sobre as Leis da Física", "author": "Richard Feynman", "original_title": "The Character of Physical Law", "year": 2022, "pages": 192, "publisher": "Editora da Unesp", "language": "Inglês", "genre": "Física/Ciência"}, {"id": 160, "date_read": "05/01/2022", "title": "Caminhar", "author": "Frédéric Gros", "original_title": "Marcher, une philosophie", "year": 2022, "pages": 256, "publisher": "Âyiné", "language": "Francês", "genre": "Filosofia"}, {"id": 161, "date_read": "07/01/2022", "title": "Como Escrever Bem", "author": "William Zinsser", "original_title": "On Writing Well", "year": 2017, "pages": 320, "publisher": "Objetiva", "language": "Inglês", "genre": "Escrita/Manual"}, {"id": 162, "date_read": "14/01/2022", "title": "O Espírito do Ateísmo", "author": "André Comte-Sponville", "original_title": "L'Esprit de l'athéisme", "year": 2008, "pages": 224, "publisher": "Martins Fontes", "language": "Francês", "genre": "Filosofia/Religião"}, {"id": 163, "date_read": "15/01/2022", "title": "O Direito ao Sexo", "author": "Amia Srinivasan", "original_title": "The Right to Sex", "year": 2022, "pages": 272, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Feminismo/Filosofia"}, {"id": 164, "date_read": "24/01/2022", "title": "Siameses: Volume 1", "author": "Antônio Geraldo Figueiredo Ferreira", "original_title": "", "year": 2022, "pages": 256, "publisher": "", "language": "Português", "genre": "Romance"}, {"id": 165, "date_read": "29/01/2022", "title": "Ecos da Marselhesa", "author": "Eric Hobsbawm", "original_title": "Echoes of the Marseillaise", "year": 1990, "pages": 144, "publisher": "Paz e Terra", "language": "Inglês", "genre": "História"}, {"id": 166, "date_read": "03/02/2022", "title": "O Jardim das Cerejeiras", "author": "Anton Tchekhov", "original_title": "Вишнёвый сад", "year": 1904, "pages": 96, "publisher": "L&PM Pocket", "language": "Russo", "genre": "Teatro"}, {"id": 167, "date_read": "07/02/2022", "title": "Cinco Anos em Lyon", "author": "Bill Buford", "original_title": "Dirt", "year": 2022, "pages": 400, "publisher": "Âyiné", "language": "Inglês", "genre": "Gastronomia/Memórias"}, {"id": 168, "date_read": "23/02/2022", "title": "Detransição, Baby", "author": "Torrey Peters", "original_title": "Detransition, Baby", "year": 2022, "pages": 368, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Romance/LGBTQ+"}, {"id": 169, "date_read": "28/02/2022", "title": "La Honte", "author": "Annie Ernaux", "original_title": "La Honte", "year": 1997, "pages": 144, "publisher": "Gallimard", "language": "Francês", "genre": "Autoficção"}, {"id": 170, "date_read": "25/02/2022", "title": "Cada Um Carregue Sua Culpa", "author": "Francesca Mambocchi", "original_title": "", "year": 2022, "pages": 192, "publisher": "", "language": "Italiano", "genre": "Romance"}, {"id": 172, "date_read": "05/03/2022", "title": "Federer", "author": "Christopher Clarey", "original_title": "Exhalation", "year": 2020, "pages": 352, "publisher": "Intrínseca", "language": "Inglês", "genre": "Ficção Científica/Contos"}, {"id": 173, "date_read": "10/03/2022", "title": "Expiação", "author": "Ted Chiang", "original_title": "Shackleton", "year": 2021, "pages": 496, "publisher": "", "language": "Inglês", "genre": "Biografia/Aventura"}, {"id": 174, "date_read": "20/03/2022", "title": "Shackleton", "author": "Ranulph Fiennes", "original_title": "L'Événement", "year": 2022, "pages": 112, "publisher": "Fósforo", "language": "Francês", "genre": "Autoficção"}, {"id": 175, "date_read": "23/03/2022", "title": "O Acontecimento", "author": "Annie Ernaux", "original_title": "Réflexions sur la guillotine", "year": 2008, "pages": 96, "publisher": "Record", "language": "Francês", "genre": "Ensaio/Pena de Morte"}, {"id": 176, "date_read": "01/04/2022", "title": "Reflexões Sobre a Guilhotina", "author": "Albert Camus", "original_title": "My Turn", "year": 2016, "pages": 320, "publisher": "Intrinseca", "language": "Holandês", "genre": "Autobiografia/Futebol"}, {"id": 177, "date_read": "06/04/2022", "title": "Johan Cruyff: Autobiografia", "author": "Johan Cruyff", "original_title": "Une saison de machettes", "year": 2005, "pages": 256, "publisher": "Farrar, Straus and Giroux", "language": "Francês", "genre": "Jornalismo/Ruanda"}, {"id": 178, "date_read": "16/04/2022", "title": "Machete Season", "author": "Jean Hatzfeld", "original_title": "Sovjetistan", "year": 2022, "pages": 528, "publisher": "Objetiva", "language": "Norueguês", "genre": "Viagem/Jornalismo"}, {"id": 179, "date_read": "01/05/2022", "title": "Sovietistão", "author": "Erika Fatland", "original_title": "Sovjetistan", "year": 2022, "pages": 528, "publisher": "Objetiva", "language": "Norueguês", "genre": "Viagem/Jornalismo"}, {"id": 180, "date_read": "04/05/2022", "title": "O Livro dos Amigos", "author": "Hugo von Hofmannsthal", "original_title": "String Theory", "year": 2016, "pages": 160, "publisher": "Library of America", "language": "Inglês", "genre": "Esporte/Ensaio"}, {"id": 181, "date_read": "09/05/2022", "title": "String Theory", "author": "David Foster Wallace", "original_title": "Complotto", "year": 2022, "pages": 192, "publisher": "Âyiné", "language": "Italiano", "genre": "Política/Filosofia"}, {"id": 182, "date_read": "19/05/2022", "title": "O Complô do Poder", "author": "Donatella Di Cesare", "original_title": "Un verdor terrible", "year": 2021, "pages": 224, "publisher": "Todavia", "language": "Espanhol", "genre": "Ficção/Ciência"}, {"id": 183, "date_read": "26/05/2022", "title": "Quando Deixamos de Entender o Mundo", "author": "Benjamín Labatut", "original_title": "Les Amnésiques", "year": 2021, "pages": 368, "publisher": "Âyiné", "language": "Francês", "genre": "Memória/História"}, {"id": 184, "date_read": "30/05/2022", "title": "Os Amnésicos", "author": "Géraldine Schwarz", "original_title": "The Last Days of Roger Federer", "year": 2022, "pages": 336, "publisher": "Farrar, Straus and Giroux", "language": "Inglês", "genre": "Ensaio/Esporte"}, {"id": 185, "date_read": "15/06/2022", "title": "The Last Days of Roger Federer", "author": "Geoff Dyer", "original_title": "Die Welt von Gestern", "year": 2014, "pages": 480, "publisher": "L&PM Pocket", "language": "Alemão", "genre": "Memórias/História"}, {"id": 186, "date_read": "18/06/2022", "title": "O Mundo de Ontem", "author": "Stefan Zweig", "original_title": "The Soul of Man under Socialism", "year": 2019, "pages": 80, "publisher": "Penguin/Companhia", "language": "Inglês", "genre": "Ensaio Político"}, {"id": 187, "date_read": "24/06/2022", "title": "A Alma Humana Sob o Socialismo", "author": "Oscar Wilde", "original_title": "", "year": 2020, "pages": 288, "publisher": "Objetiva", "language": "Português", "genre": "Jornalismo/Investigação"}, {"id": 188, "date_read": "28/06/2022", "title": "João de Deus: O Abuso da Fé", "author": "Cristina Fibe", "original_title": "", "year": 2021, "pages": 272, "publisher": "Companhia das Letras", "language": "Português", "genre": "Memórias/Medicina"}, {"id": 189, "date_read": "06/07/2022", "title": "O Exercício da Imaginação", "author": "Drauzio Varella", "original_title": "The Appointment", "year": 2022, "pages": 128, "publisher": "Fósforo", "language": "Inglês", "genre": "Romance"}, {"id": 190, "date_read": "13/07/2022", "title": "A Consulta", "author": "Katharina Volckmer", "original_title": "L'impronta dell'editore", "year": 2014, "pages": 192, "publisher": "Âyiné", "language": "Italiano", "genre": "Literatura/Edição"}, {"id": 191, "date_read": "14/07/2022", "title": "A Marca do Editor", "author": "Roberto Calasso", "original_title": "Warped Passages", "year": 2007, "pages": 500, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Física/Cosmologia"}, {"id": 192, "date_read": "19/07/2022", "title": "O Universo Invisível", "author": "Lisa Randall", "original_title": "La Bombe", "year": 2021, "pages": 480, "publisher": "Veneta", "language": "Francês", "genre": "Quadrinhos/História"}, {"id": 193, "date_read": "24/07/2022", "title": "A Bomba", "author": "Alcántara, Nuclée, Robien", "original_title": "Hood Feminism", "year": 2022, "pages": 288, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Feminismo/Raça"}, {"id": 194, "date_read": "31/07/2022", "title": "Feminismo na Periferia", "author": "Mikki Kendall", "original_title": "Die schlaflose Welt", "year": 2014, "pages": 96, "publisher": "L&PM Pocket", "language": "Alemão", "genre": "Ensaio"}, {"id": 195, "date_read": "16/08/2022", "title": "O Mundo Insone", "author": "Stefan Zweig", "original_title": "The Jakarta Method", "year": 2022, "pages": 320, "publisher": "Todavia", "language": "Inglês", "genre": "História/Jornalismo"}, {"id": 196, "date_read": "21/08/2022", "title": "O Método Jacarta", "author": "Vincent Bevins", "original_title": "La speculazione edilizia", "year": 2010, "pages": 160, "publisher": "Companhia das Letras", "language": "Italiano", "genre": "Romance"}, {"id": 197, "date_read": "29/08/2022", "title": "A Especulação Imobiliária", "author": "Italo Calvino", "original_title": "", "year": 2022, "pages": 320, "publisher": "Companhia das Letras", "language": "Português", "genre": "Jornalismo/Política"}, {"id": 198, "date_read": "04/09/2022", "title": "O Ovo da Serpente", "author": "Consuelo Díeguez", "original_title": "", "year": 2022, "pages": 256, "publisher": "", "language": "Português", "genre": "Romance"}, {"id": 199, "date_read": "14/09/2022", "title": "Newton", "author": "Luis Francisco Carvalho Filho", "original_title": "Il sistema periodico", "year": 2016, "pages": 256, "publisher": "", "language": "Italiano", "genre": "Memórias/Química"}, {"id": 200, "date_read": "24/09/2022", "title": "O Sistema Periódico", "author": "Primo Levi", "original_title": "", "year": 2022, "pages": 96, "publisher": "Record", "language": "Francês", "genre": "Ensaio"}, {"id": 201, "date_read": "30/09/2022", "title": "A Inteligência e o Cadafalso", "author": "Albert Camus", "original_title": "", "year": 2022, "pages": 256, "publisher": "Companhia das Letras", "language": "Português", "genre": "Ensaio/Identidade"}, {"id": 202, "date_read": "10/10/2022", "title": "O Não Judeu Judeu", "author": "Michel Gherman", "original_title": "Hiroshima", "year": 2017, "pages": 224, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Jornalismo/História"}, {"id": 203, "date_read": "23/10/2022", "title": "Hiroshima", "author": "John Hersey", "original_title": "Watermark", "year": 1992, "pages": 144, "publisher": "Farrar, Straus and Giroux", "language": "Inglês", "genre": "Ensaio/Viagem"}, {"id": 204, "date_read": "24/10/2022", "title": "Watermark: An Essay on Venice", "author": "Joseph Brodsky", "original_title": "L'effondrement (et après) expliqué à nos enfants", "year": 2022, "pages": 192, "publisher": "Seuil", "language": "Francês", "genre": "Ecologia/Ensaio"}, {"id": 205, "date_read": "04/11/2022", "title": "L'effondrement Expliqué à Nos Enfants et à Nos Parents", "author": "Pablo Servigne, Gauthier Chapelle", "original_title": "", "year": 2022, "pages": 96, "publisher": "", "language": "Francês", "genre": "Discursos/Memórias"}, {"id": 206, "date_read": "08/11/2022", "title": "Seul l'Espoir Arrache la Douceur", "author": "Simone Veil", "original_title": "", "year": 2022, "pages": 128, "publisher": "Todavia", "language": "Espanhol", "genre": "Ficção/Ciência"}, {"id": 207, "date_read": "14/11/2022", "title": "A Pedra da Loucura", "author": "Benjamín Labatut", "original_title": "La piedra de la locura", "year": 2022, "pages": 128, "publisher": "Âyiné", "language": "Espanhol", "genre": "Ficção/Ciência"}, {"id": 208, "date_read": "24/11/2022", "title": "La Musica", "author": "Marguerite Duras", "original_title": "Le Mythe de Sisyphe", "year": 2019, "pages": 128, "publisher": "Record", "language": "Francês", "genre": "Filosofia/Existencialismo"}, {"id": 209, "date_read": "28/11/2022", "title": "O Mito de Sísifo", "author": "Albert Camus", "original_title": "The Call of Cthulhu", "year": 2019, "pages": 160, "publisher": "Darkside", "language": "Inglês", "genre": "Terror/Ficção"}, {"id": 210, "date_read": "05/12/2022", "title": "O Chamado de Cthulhu", "author": "H.P. Lovecraft", "original_title": "Discours de Suède", "year": 1958, "pages": 96, "publisher": "Gallimard", "language": "Francês", "genre": "Discurso/Literatura"}, {"id": 211, "date_read": "20/12/2022", "title": "Discours de Suède", "author": "Albert Camus", "original_title": "Journaux de voyage", "year": 2022, "pages": 192, "publisher": "Record", "language": "Francês", "genre": "Diário/Viagem"}, {"id": 212, "date_read": "22/12/2022", "title": "Diário de Viagem", "author": "Albert Camus", "original_title": "", "year": 2023, "pages": 288, "publisher": "Companhia das Letras", "language": "Português", "genre": "Jornalismo/Política"}, {"id": 213, "date_read": "17/01/2023", "title": "Poder Camuflado", "author": "Fabio Victor", "original_title": "Grensen", "year": 2020, "pages": 560, "publisher": "Objetiva", "language": "Norueguês", "genre": "Viagem/Jornalismo"}, {"id": 214, "date_read": "06/02/2023", "title": "A Fronteira", "author": "Erika Fatland", "original_title": "", "year": 2023, "pages": 224, "publisher": "", "language": "Português", "genre": "Crônicas"}, {"id": 215, "date_read": "13/02/2023", "title": "Eles Não São Loucos", "author": "João Borges", "original_title": "Barcellona-Sampdoria 1-0", "year": 2023, "pages": 256, "publisher": "", "language": "Italiano", "genre": "Esporte/História"}, {"id": 216, "date_read": "15/02/2023", "title": "Anatomia do Sarriá", "author": "Pietro Trellini", "original_title": "L'Étranger", "year": 2019, "pages": 128, "publisher": "Record", "language": "Francês", "genre": "Romance/Existencialismo"}, {"id": 217, "date_read": "17/02/2023", "title": "O Estrangeiro", "author": "Albert Camus", "original_title": "夏の花", "year": 2019, "pages": 128, "publisher": "Âyiné", "language": "Japonês", "genre": "Literatura/Hiroshima"}, {"id": 218, "date_read": "09/03/2023", "title": "Flores de Verão", "author": "Tamiki Hara", "original_title": "", "year": 2023, "pages": 256, "publisher": "Companhia das Letras", "language": "Português", "genre": "Ensaio/Memórias"}, {"id": 219, "date_read": "15/03/2023", "title": "O Que É Meu", "author": "José Henrique Bortoluci", "original_title": "The Reader as Metaphor", "year": 2017, "pages": 160, "publisher": "Edições Sesc", "language": "Inglês", "genre": "Literatura/Ensaio"}, {"id": 220, "date_read": "16/03/2023", "title": "O Leitor Como Metáfora", "author": "Alberto Manguel", "original_title": "La sociedad de la nieve", "year": 2022, "pages": 368, "publisher": "Objetiva", "language": "Espanhol", "genre": "Jornalismo/Sobrevivência"}, {"id": 221, "date_read": "31/03/2023", "title": "A Sociedade da Neve", "author": "Pablo Vierci", "original_title": "Lord of the Flies", "year": 2014, "pages": 256, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Romance"}, {"id": 222, "date_read": "11/04/2023", "title": "O Senhor das Moscas", "author": "William Golding", "original_title": "If All the World and Love Were Young", "year": 2019, "pages": 80, "publisher": "Penguin", "language": "Inglês", "genre": "Poesia"}, {"id": 223, "date_read": "19/04/2023", "title": "If All the Love Were Young", "author": "Stephen Sexton", "original_title": "Our Universe", "year": 2023, "pages": 256, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Astronomia/Cosmologia"}, {"id": 224, "date_read": "24/04/2023", "title": "Nosso Universo", "author": "Jo Dunkley", "original_title": "Come ordinare una biblioteca", "year": 2021, "pages": 96, "publisher": "Companhia das Letras", "language": "Italiano", "genre": "Literatura/Ensaio"}, {"id": 225, "date_read": "25/04/2023", "title": "Como Organizar uma Biblioteca", "author": "Roberto Calasso", "original_title": "Wir Eichmannsöhne", "year": 2019, "pages": 128, "publisher": "Âyiné", "language": "Alemão", "genre": "Política/Filosofia"}, {"id": 226, "date_read": "24/04/2023", "title": "Nós, Filhos do Eichmann", "author": "Günther Anders", "original_title": "On Freedom", "year": 2022, "pages": 288, "publisher": "n-1 edições", "language": "Inglês", "genre": "Ensaio/Filosofia"}, {"id": 227, "date_read": "27/04/2023", "title": "Sobre a Liberdade", "author": "Maggie Nelson", "original_title": "Vita segreta delle emozioni", "year": 2023, "pages": 224, "publisher": "Âyiné", "language": "Italiano", "genre": "Filosofia/Psicologia"}, {"id": 228, "date_read": "02/05/2023", "title": "A Vida Secreta das Emoções", "author": "Ilaria Gaspari", "original_title": "Psychopolitik", "year": 2018, "pages": 112, "publisher": "Vozes", "language": "Alemão", "genre": "Filosofia Política"}, {"id": 229, "date_read": "04/05/2023", "title": "Psicopolítica", "author": "Byung-Chul Han", "original_title": "The Dawn of Everything", "year": 2022, "pages": 706, "publisher": "Todavia", "language": "Inglês", "genre": "Antropologia/História"}, {"id": 230, "date_read": "08/05/2023", "title": "O Despertar de Tudo", "author": "David Graeber, David Wengrow", "original_title": "The Dawn of Everything", "year": 2022, "pages": 706, "publisher": "Todavia", "language": "Inglês", "genre": "Antropologia/História"}, {"id": 231, "date_read": "10/05/2023", "title": "Hércules", "author": "Eurípides", "original_title": "The Varieties of Scientific Experience", "year": 2008, "pages": 304, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Ciência/Religião"}, {"id": 232, "date_read": "25/05/2023", "title": "Variedades da Experiência Científica", "author": "Carl Sagan", "original_title": "Il sentiero dei nidi di ragno", "year": 2004, "pages": 192, "publisher": "Companhia das Letras", "language": "Italiano", "genre": "Romance"}, {"id": 233, "date_read": "30/05/2023", "title": "A Emboscada na Guerra", "author": "Italo Calvino", "original_title": "El pensamiento monógamo", "year": 2022, "pages": 192, "publisher": "n-1 edições", "language": "Espanhol", "genre": "Relações/Feminismo"}, {"id": 234, "date_read": "20/06/2023", "title": "O Desafio Poliamoroso", "author": "Brigitte Vasallo", "original_title": "Poczta literacka", "year": 2019, "pages": 128, "publisher": "Companhia das Letras", "language": "Polonês", "genre": "Cartas/Crítica"}, {"id": 235, "date_read": "26/06/2023", "title": "Correio Literário", "author": "Wisława Szymborska", "original_title": "", "year": 2023, "pages": 320, "publisher": "", "language": "Português", "genre": "Política/Brasil"}, {"id": 236, "date_read": "05/07/2023", "title": "Treze: A Política de Rua de Lula a Dilma", "author": "Angela Alonso", "original_title": "", "year": 2023, "pages": 320, "publisher": "Companhia das Letras", "language": "Português", "genre": "Política/Brasil"}, {"id": 237, "date_read": "10/07/2023", "title": "Reflexões Sobre as Causas da Liberdade e da Opressão Social", "author": "Simone Weil", "original_title": "La Peste", "year": 2020, "pages": 320, "publisher": "Record", "language": "Francês", "genre": "Romance"}, {"id": 238, "date_read": "17/07/2023", "title": "A Peste", "author": "Albert Camus", "original_title": "American Prometheus", "year": 2023, "pages": 800, "publisher": "Intrínseca", "language": "Inglês", "genre": "Biografia/História"}, {"id": 239, "date_read": "19/07/2023", "title": "Oppenheimer", "author": "Kai Bird, Martin Sherwin", "original_title": "Bhagavad Gita", "year": 2020, "pages": 192, "publisher": "Penguin/Companhia", "language": "Sânscrito", "genre": "Espiritualidade/Filosofia"}, {"id": 240, "date_read": "24/07/2023", "title": "O Bhagavad Gita", "author": "Anônimo", "original_title": "Bhagavad Gita", "year": 2020, "pages": 192, "publisher": "Penguin/Companhia", "language": "Sânscrito", "genre": "Espiritualidade/Filosofia"}, {"id": 241, "date_read": "01/08/2023", "title": "O Problema dos Três Corpos", "author": "Cixin Liu", "original_title": "The Making of the Atomic Bomb", "year": 1987, "pages": 886, "publisher": "Simon & Schuster", "language": "Inglês", "genre": "História/Ciência"}, {"id": 242, "date_read": "11/08/2023", "title": "The Making of the Atomic Bomb", "author": "Richard Rhodes", "original_title": "", "year": 2023, "pages": 192, "publisher": "", "language": "Português", "genre": "Física"}, {"id": 243, "date_read": "19/08/2023", "title": "Problemas da Física Moderna", "author": "Pierre Schrödinger et al.", "original_title": "", "year": 1974, "pages": 224, "publisher": "Cultrix", "language": "Inglês", "genre": "Física"}, {"id": 244, "date_read": "22/08/2023", "title": "Exploração", "author": "Gabriela Wiener", "original_title": "Atomic Physics and Human Knowledge", "year": 2019, "pages": 128, "publisher": "Contraponto", "language": "Inglês/Dinamarquês", "genre": "Física/Filosofia"}, {"id": 245, "date_read": "28/08/2023", "title": "Física Atômica e Conhecimento Humano", "author": "Niels Bohr", "original_title": "Childhood's End", "year": 2022, "pages": 256, "publisher": "Aleph", "language": "Inglês", "genre": "Ficção Científica"}, {"id": 246, "date_read": "08/09/2023", "title": "O Fim da Infância", "author": "Arthur C. Clarke", "original_title": "黑暗森林", "year": 2017, "pages": 576, "publisher": "Intrínseca", "language": "Chinês", "genre": "Ficção Científica"}, {"id": 247, "date_read": "11/09/2023", "title": "A Floresta Sombria", "author": "Cixin Liu", "original_title": "Killers of the Flower Moon", "year": 2018, "pages": 368, "publisher": "Objetiva", "language": "Inglês", "genre": "Jornalismo/História"}, {"id": 248, "date_read": "12/09/2023", "title": "Assassinos da Lua das Flores", "author": "David Grann", "original_title": "Copenhagen", "year": 1998, "pages": 128, "publisher": "Âyiné", "language": "Inglês", "genre": "Teatro/Ciência"}, {"id": 249, "date_read": "18/09/2023", "title": "Copenhagen", "author": "Michael Frayn", "original_title": "死神永生", "year": 2018, "pages": 640, "publisher": "Intrínseca", "language": "Chinês", "genre": "Ficção Científica"}, {"id": 250, "date_read": "21/09/2023", "title": "O Fim da Morte", "author": "Cixin Liu", "original_title": "Space Invaders", "year": 2020, "pages": 128, "publisher": "n-1 edições", "language": "Espanhol", "genre": "Romance/Memória"}, {"id": 251, "date_read": "03/10/2023", "title": "Space Invaders", "author": "Nona Fernández", "original_title": "Passion simple", "year": 2022, "pages": 96, "publisher": "Fósforo", "language": "Francês", "genre": "Autoficção"}, {"id": 252, "date_read": "04/11/2023", "title": "Paixão Simples", "author": "Annie Ernaux", "original_title": "Turing's Cathedral", "year": 2012, "pages": 448, "publisher": "Vintage", "language": "Inglês", "genre": "História/Tecnologia"}, {"id": 253, "date_read": "08/12/2023", "title": "Turing's Cathedral", "author": "George Dyson", "original_title": "Dernier Royaume", "year": 2023, "pages": 128, "publisher": "Âyiné", "language": "Francês", "genre": "Filosofia/Literatura"}, {"id": 254, "date_read": "17/12/2023", "title": "Último Reino", "author": "Pascal Quignard", "original_title": "Tempo", "year": 2022, "pages": 240, "publisher": "Companhia das Letras", "language": "Italiano", "genre": "Física/Cosmologia"}, {"id": 255, "date_read": "13/12/2023", "title": "Tempo", "author": "Guido Tonelli", "original_title": "Προμηθεὺς δεσμώτης", "year": 2018, "pages": 96, "publisher": "Perspectiva", "language": "Grego Antigo", "genre": "Teatro Grego"}, {"id": 256, "date_read": "14/12/2023", "title": "Prometeu Prisioneiro", "author": "Ésquilo", "original_title": "Raison", "year": 2023, "pages": 96, "publisher": "Âyiné", "language": "Francês", "genre": "Filosofia"}, {"id": 257, "date_read": "22/12/2023", "title": "A Razão", "author": "Pascal Quignard", "original_title": "", "year": 2023, "pages": 256, "publisher": "", "language": "Português", "genre": "Romance"}, {"id": 258, "date_read": "26/12/2023", "title": "Baviera Tropical: A história do nazista mais procurado do Brasil", "author": "Betina Anton", "original_title": "Heimat", "year": 2020, "pages": 288, "publisher": "Companhia das Letras", "language": "Alemão/Inglês", "genre": "Jornalismo/História"}, {"id": 259, "date_read": "04/10/2023", "title": "Heimat", "author": "Nora Krug", "original_title": "When the Game Was War", "year": 2023, "pages": 352, "publisher": "Random House", "language": "Inglês", "genre": "Esporte/História"}, {"id": 260, "date_read": "06/10/2023", "title": "When the Game Was War", "author": "Rich Cohen", "original_title": "Prisoner's Dilemma", "year": 1993, "pages": 304, "publisher": "Anchor Books", "language": "Inglês", "genre": "Matemática/Teoria dos Jogos"}, {"id": 261, "date_read": "09/10/2023", "title": "Prisoner's Dilemma", "author": "William Poundstone", "original_title": "Nobel Lecture", "year": 2017, "pages": 80, "publisher": "Simon & Schuster", "language": "Inglês", "genre": "Discurso/Literatura"}, {"id": 262, "date_read": "11/10/2023", "title": "Bob Dylan: Nobel Lecture", "author": "Bob Dylan", "original_title": "The Maniac", "year": 2023, "pages": 352, "publisher": "Penguin Press", "language": "Inglês", "genre": "Ficção/Ciência"}, {"id": 263, "date_read": "11/10/2023", "title": "The Maniac", "author": "Benjamín Labatut", "original_title": "Why Women Have Better Sex Under Socialism", "year": 2020, "pages": 224, "publisher": "Âyiné", "language": "Inglês", "genre": "Política/Feminismo"}, {"id": 264, "date_read": "13/10/2023", "title": "Por Que as Mulheres Têm Melhor Sexo Sob o Socialismo", "author": "Kristen Ghodsee", "original_title": "Exterminate All the Brutes", "year": 2020, "pages": 192, "publisher": "Âyiné", "language": "Sueco", "genre": "História/Colonialismo"}, {"id": 265, "date_read": "16/10/2023", "title": "Externem Todos os Malditos", "author": "Sven Lindqvist", "original_title": "", "year": 2023, "pages": 192, "publisher": "", "language": "Português", "genre": "Romance"}, {"id": 266, "date_read": "20/10/2023", "title": "Dois Sherpas", "author": "Sebastián Martínez Daniell", "original_title": "The Stars", "year": 2023, "pages": 96, "publisher": "", "language": "Espanhol", "genre": "Poesia/Ensaio"}, {"id": 267, "date_read": "24/10/2023", "title": "As Estrelas", "author": "Eliot Weinberger", "original_title": "Buchi bianchi", "year": 2023, "pages": 128, "publisher": "Riverhead Books", "language": "Italiano", "genre": "Física/Cosmologia"}, {"id": 268, "date_read": "04/11/2023", "title": "White Holes", "author": "Carlo Rovelli", "original_title": "La vida es sueño", "year": 1635, "pages": 128, "publisher": "L&PM Pocket", "language": "Espanhol", "genre": "Teatro Barroco"}, {"id": 269, "date_read": "13/11/2023", "title": "A Vida É Sonho", "author": "Calderón de la Barca", "original_title": "Frères", "year": 2023, "pages": 192, "publisher": "", "language": "Francês", "genre": "Esporte/Memórias"}, {"id": 270, "date_read": "29/11/2023", "title": "Judoca", "author": "Thierry Frémaux", "original_title": "国境の南、太陽の西", "year": 2013, "pages": 192, "publisher": "Editora Madalena", "language": "Francês", "genre": "Romance"}, {"id": 271, "date_read": "30/11/2023", "title": "Sul da Fronteira, Oeste do Sol", "author": "Haruki Murakami", "original_title": "", "year": 2023, "pages": 64, "publisher": "", "language": "Inglês", "genre": "Poesia"}, {"id": 272, "date_read": "14/12/2023", "title": "Azuis", "author": "Maggie Nelson", "original_title": "Bluets", "year": 2022, "pages": 256, "publisher": "n-1 edições", "language": "Inglês", "genre": "Ficção Científica"}, {"id": 273, "date_read": "14/12/2023", "title": "Encontro com Rama", "author": "Arthur C. Clarke", "original_title": "", "year": 2024, "pages": 256, "publisher": "", "language": "Inglês", "genre": "Romance"}, {"id": 274, "date_read": "23/01/2024", "title": "Castelo de Areia", "author": "Andi Watson", "original_title": "Skeleton Key", "year": 2023, "pages": 192, "publisher": "Darkside", "language": "Espanhol", "genre": "Quadrinhos"}, {"id": 275, "date_read": "29/01/2024", "title": "O Perigo de Estar Lúcida", "author": "Rosa Montero", "original_title": "Le Tueur", "year": 2005, "pages": 128, "publisher": "Casterman", "language": "Francês", "genre": "Quadrinhos/Policial"}, {"id": 276, "date_read": "30/01/2024", "title": "Le Tueur", "author": "Jacamon, Matz", "original_title": "Le Tueur", "year": 2005, "pages": 128, "publisher": "Casterman", "language": "Francês", "genre": "Quadrinhos/Policial"}, {"id": 277, "date_read": "02/02/2024", "title": "Berlin", "author": "Jason Lutes", "original_title": "Pirate Enlightenment, or the Real Libertalia", "year": 2023, "pages": 224, "publisher": "Farrar, Straus and Giroux", "language": "Inglês", "genre": "História/Antropologia"}, {"id": 278, "date_read": "05/02/2024", "title": "Pirate Enlightenment", "author": "David Graeber", "original_title": "Pirate Enlightenment, or the Real Libertalia", "year": 2023, "pages": 224, "publisher": "Farrar, Straus and Giroux", "language": "Inglês", "genre": "História/Antropologia"}, {"id": 279, "date_read": "06/02/2024", "title": "The Redemption of Time", "author": "Baoshu", "original_title": "Le nom sur le bout de la langue", "year": 2020, "pages": 96, "publisher": "Âyiné", "language": "Francês", "genre": "Filosofia/Literatura"}, {"id": 280, "date_read": "08/02/2024", "title": "O Nome na Ponta da Língua", "author": "Pascal Quignard", "original_title": "Pale Blue Dot", "year": 2019, "pages": 448, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Astronomia/Filosofia"}, {"id": 281, "date_read": "23/02/2024", "title": "Pálido Ponto Azul", "author": "Carl Sagan", "original_title": "Pale Blue Dot", "year": 2019, "pages": 448, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Astronomia/Filosofia"}, {"id": 282, "date_read": "02/03/2024", "title": "Os Persas", "author": "Ésquilo", "original_title": "Πέρσαι", "year": 2023, "pages": 80, "publisher": "Perspectiva", "language": "Grego Antigo", "genre": "Teatro Grego"}, {"id": 283, "date_read": "11/03/2024", "title": "Floresta É o Nome do Mundo", "author": "Ursula K. Le Guin", "original_title": "Devotion", "year": 2021, "pages": 128, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Ficção/Criatividade"}, {"id": 284, "date_read": "18/03/2024", "title": "Devoção", "author": "Patti Smith", "original_title": "Devotion", "year": 2017, "pages": 128, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Ficção/Criatividade"}, {"id": 285, "date_read": "02/04/2024", "title": "Deslumbramento", "author": "Richard Powers", "original_title": "My Life", "year": 2022, "pages": 192, "publisher": "Boitempo", "language": "Russo", "genre": "Memórias/Política"}, {"id": 286, "date_read": "03/04/2024", "title": "Fuga da Sibéria", "author": "Leon Trotsky", "original_title": "No Time to Spare", "year": 2023, "pages": 224, "publisher": "Aleph", "language": "Inglês", "genre": "Ensaio/Crônicas"}, {"id": 287, "date_read": "09/04/2024", "title": "Sem Tempo a Perder", "author": "Ursula K. Le Guin", "original_title": "How the Universe Got Its Spots", "year": 2002, "pages": 224, "publisher": "Princeton University Press", "language": "Inglês", "genre": "Cosmologia/Ciência"}, {"id": 288, "date_read": "23/04/2024", "title": "How the Universe Got Its Spots", "author": "Janna Levin", "original_title": "Albert Camus and the Human Crisis", "year": 2021, "pages": 192, "publisher": "Arcade", "language": "Inglês", "genre": "Filosofia/Política"}, {"id": 289, "date_read": "16/05/2024", "title": "Albert Camus and the Human Crisis", "author": "Robert Meagher", "original_title": "The Greeks", "year": 2005, "pages": 288, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "História"}, {"id": 290, "date_read": "21/05/2024", "title": "Os Gregos", "author": "Isaac Asimov", "original_title": "La Chute", "year": 2016, "pages": 128, "publisher": "Record", "language": "Francês", "genre": "Romance"}, {"id": 291, "date_read": "28/05/2024", "title": "A Queda", "author": "Albert Camus", "original_title": "Hedda Gabler", "year": 1890, "pages": 128, "publisher": "L&PM Pocket", "language": "Norueguês", "genre": "Teatro"}, {"id": 292, "date_read": "29/05/2024", "title": "Hedda Gabler", "author": "Henrik Ibsen", "original_title": "Normal People", "year": 2020, "pages": 288, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Romance"}, {"id": 293, "date_read": "29/05/2024", "title": "Normal People", "author": "Sally Rooney", "original_title": "A Life Worth Living", "year": 2013, "pages": 224, "publisher": "Harvard University Press", "language": "Inglês", "genre": "Filosofia/Camus"}, {"id": 294, "date_read": "31/05/2024", "title": "A Life Worth Living", "author": "Robert Zaretsky", "original_title": "A Colossal Failure of Common Sense", "year": 2009, "pages": 368, "publisher": "Crown Business", "language": "Inglês", "genre": "Economia/Finanças"}, {"id": 295, "date_read": "09/06/2024", "title": "A Colossal Failure of Common Sense", "author": "Lawrence McDonald", "original_title": "Conversations with Friends", "year": 2020, "pages": 304, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Romance"}, {"id": 296, "date_read": "11/06/2024", "title": "Conversa Entre Amigos", "author": "Sally Rooney", "original_title": "Le parfum des fleurs la nuit", "year": 2022, "pages": 128, "publisher": "Tusquets", "language": "Francês", "genre": "Ensaio/Arte"}, {"id": 297, "date_read": "12/06/2024", "title": "Perfume das Flores à Noite", "author": "Leila Slimani", "original_title": "A Madman Dreams of Turing Machines", "year": 2019, "pages": 240, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Ficção Científica/Matemática"}, {"id": 298, "date_read": "18/06/2024", "title": "Um Louco Sonha a Máquina Universal", "author": "Janna Levin", "original_title": "Things I Don't Want to Know", "year": 2022, "pages": 160, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Memórias/Ensaio"}, {"id": 299, "date_read": "19/06/2024", "title": "Coisas Que Não Quero Saber", "author": "Deborah Levy", "original_title": "Les Justes", "year": 1949, "pages": 128, "publisher": "Gallimard", "language": "Francês", "genre": "Teatro"}, {"id": 300, "date_read": "24/06/2024", "title": "Les Justes", "author": "Albert Camus", "original_title": "", "year": 2023, "pages": 128, "publisher": "", "language": "Tcheco/Francês", "genre": "Ensaio/Viagem"}, {"id": 301, "date_read": "11/07/2024", "title": "Loving Venice", "author": "Petr Král", "original_title": "Nuclear War: A Scenario", "year": 2024, "pages": 368, "publisher": "Pushkin Press", "language": "Tcheco", "genre": "Política/Defesa"}, {"id": 302, "date_read": "12/07/2024", "title": "Nuclear War: A Scenario", "author": "Annie Jacobsen", "original_title": "The Cost of Living", "year": 2022, "pages": 128, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Memórias/Ensaio"}, {"id": 303, "date_read": "15/07/2024", "title": "O Custo de Viver", "author": "Deborah Levy", "original_title": "Jumpman", "year": 2023, "pages": 384, "publisher": "Crown", "language": "Inglês", "genre": "Esporte/Biografia"}, {"id": 304, "date_read": "23/07/2024", "title": "Jumpman", "author": "Johnny Smith", "original_title": "The Wager", "year": 2024, "pages": 352, "publisher": "Objetiva", "language": "Inglês", "genre": "Jornalismo/Aventura"}, {"id": 305, "date_read": "16/08/2024", "title": "Os Náufragos do Wager", "author": "David Grann", "original_title": "Om udregning af rumfang", "year": 2024, "pages": 176, "publisher": "Fósforo", "language": "Dinamarquês", "genre": "Romance"}, {"id": 306, "date_read": "23/08/2024", "title": "Sobre o Cálculo do Volume", "author": "Solvej Balle", "original_title": "The Godfather", "year": 2019, "pages": 512, "publisher": "Record", "language": "Inglês", "genre": "Romance/Crime"}, {"id": 307, "date_read": "12/09/2024", "title": "O Poderoso Chefão", "author": "Mario Puzo", "original_title": "Plateforme", "year": 2017, "pages": 320, "publisher": "Record", "language": "Francês", "genre": "Romance"}, {"id": 308, "date_read": "16/09/2024", "title": "Plataforma", "author": "Michel Houellebecq", "original_title": "", "year": 2019, "pages": 256, "publisher": "IMPA", "language": "Português", "genre": "Matemática/História"}, {"id": 309, "date_read": "19/09/2024", "title": "Histórias da Matemática", "author": "Marcelo Viana", "original_title": "Folk Music: A Bob Dylan Biography in Seven Songs", "year": 2022, "pages": 272, "publisher": "Yale University Press", "language": "Inglês", "genre": "Música/Crítica"}, {"id": 310, "date_read": "23/09/2024", "title": "Folk Music", "author": "Greil Marcus", "original_title": "Om udregning af rumfang II", "year": 2024, "pages": 176, "publisher": "Fósforo", "language": "Dinamarquês", "genre": "Romance"}, {"id": 311, "date_read": "02/10/2024", "title": "Sobre o Cálculo do Volume 2", "author": "Solvej Balle", "original_title": "The Dispossessed", "year": 2019, "pages": 432, "publisher": "Aleph", "language": "Inglês", "genre": "Ficção Científica"}, {"id": 312, "date_read": "04/10/2024", "title": "A Curva do Sonho", "author": "Ursula K. Le Guin", "original_title": "", "year": 2024, "pages": 128, "publisher": "", "language": "Inglês", "genre": "Ficção Científica"}, {"id": 313, "date_read": "17/11/2024", "title": "Uma História (Muito) Curta na Vida Materna", "author": "Henry Gee", "original_title": "The Lost City of Z", "year": 2009, "pages": 352, "publisher": "Objetiva", "language": "Inglês", "genre": "Jornalismo/Aventura"}, {"id": 314, "date_read": "18/11/2024", "title": "Z: A Cidade Perdida", "author": "David Grann", "original_title": "Determined", "year": 2024, "pages": 528, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Neurociência/Livre-Arbítrio"}, {"id": 315, "date_read": "25/11/2024", "title": "Determined", "author": "Robert Sapolsky", "original_title": "Warum Krieg?", "year": 2019, "pages": 80, "publisher": "Penguin/Companhia", "language": "Alemão", "genre": "Psicologia/Política"}, {"id": 316, "date_read": "26/11/2024", "title": "Por Que a Guerra?", "author": "Freud, Einstein", "original_title": "Heller als tausend Sonnen", "year": 1958, "pages": 356, "publisher": "Harcourt", "language": "Alemão", "genre": "História/Física Nuclear"}, {"id": 317, "date_read": "29/11/2024", "title": "Brighter Than a Thousand Suns", "author": "Robert Jungk", "original_title": "Lettres à un ami allemand", "year": 1948, "pages": 96, "publisher": "Gallimard", "language": "Francês", "genre": "Cartas/Resistência"}, {"id": 318, "date_read": "02/12/2024", "title": "Lettres à un Ami Allemand", "author": "Albert Camus", "original_title": "El Eternauta", "year": 2022, "pages": 352, "publisher": "Companhia das Letras", "language": "Espanhol", "genre": "Quadrinhos/Ficção Científica"}, {"id": 319, "date_read": "06/12/2024", "title": "O Eternauta", "author": "Héctor Germán Oesterheld", "original_title": "Le dossier H", "year": 2019, "pages": 192, "publisher": "Companhia das Letras", "language": "Albanês", "genre": "Romance"}, {"id": 320, "date_read": "10/12/2024", "title": "Um Ditador na Linha", "author": "Ismail Kadare", "original_title": "Aspekte des neuen Rechtsradikalismus", "year": 2020, "pages": 96, "publisher": "Editora Unesp", "language": "Alemão", "genre": "Política/Filosofia"}, {"id": 321, "date_read": "11/12/2024", "title": "Aspectos do Novo Radicalismo de Direita", "author": "Theodor Adorno", "original_title": "What Is Madness?", "year": 2023, "pages": 192, "publisher": "", "language": "Inglês", "genre": "Psicanálise"}, {"id": 322, "date_read": "22/12/2024", "title": "Alguma Vez É Só Sexo?", "author": "Darian Leader", "original_title": "", "year": "", "pages": "", "publisher": "", "language": "", "genre": ""}, {"id": 323, "date_read": "27/12/2024", "title": "The Sapir-Whorf Hypothesis", "author": "Renate Giesbrecht", "original_title": "The Sapir-Whorf Hypothesis", "year": 2020, "pages": 96, "publisher": "", "language": "Grego Antigo", "genre": "Teatro Grego"}, {"id": 324, "date_read": "29/12/2024", "title": "Medeia", "author": "Eurípides", "original_title": "The End of Eternity", "year": 2019, "pages": 256, "publisher": "Aleph", "language": "Inglês", "genre": "Ficção Científica"}, {"id": 325, "date_read": "06/01/2025", "title": "O Fim na Eternidade", "author": "Isaac Asimov", "original_title": "", "year": 2025, "pages": 256, "publisher": "", "language": "Português", "genre": "Política/Brasil"}, {"id": 326, "date_read": "07/01/2025", "title": "Democracia Negociada", "author": "Weller, Limongi", "original_title": "Rapporto sull'organizzazione igienico-sanitaria del campo di concentramento per Ebrei", "year": 2021, "pages": 128, "publisher": "Companhia das Letras", "language": "Italiano", "genre": "História/Testemunho"}, {"id": 327, "date_read": "18/01/2025", "title": "Auschwitz Report", "author": "Primo Levi", "original_title": "Cher connard", "year": 2024, "pages": 288, "publisher": "Âyiné", "language": "Francês", "genre": "Romance epistolar"}, {"id": 328, "date_read": "24/01/2025", "title": "Querido Babaca", "author": "Virginie Despentes", "original_title": "Hideg krematórium", "year": 2022, "pages": 256, "publisher": "", "language": "Húngaro", "genre": "Memórias/Holocausto"}, {"id": 329, "date_read": "02/02/2025", "title": "O Crematório Frio", "author": "József Debreczeni", "original_title": "Τρῳάδες", "year": 2018, "pages": 96, "publisher": "Perspectiva", "language": "Grego Antigo", "genre": "Teatro Grego"}, {"id": 330, "date_read": "03/02/2025", "title": "As Troianas", "author": "Eurípides", "original_title": "Qualcosa sui Lehman", "year": 2018, "pages": 480, "publisher": "Harper Perennial", "language": "Italiano", "genre": "Teatro/História"}, {"id": 331, "date_read": "10/02/2025", "title": "The Lehman Trilogy", "author": "Stefano Massini", "original_title": "The Prestige", "year": 1995, "pages": 368, "publisher": "Tor Books", "language": "Inglês", "genre": "Ficção Científica/Thriller"}, {"id": 332, "date_read": "01/03/2025", "title": "The Prestige", "author": "Christopher Priest", "original_title": "Feminism Against Progress", "year": 2023, "pages": 272, "publisher": "Regnery Publishing", "language": "Inglês", "genre": "Política/Feminismo"}, {"id": 333, "date_read": "11/03/2025", "title": "Feminism Against Progress", "author": "Mary Harrington", "original_title": "", "year": 2025, "pages": 192, "publisher": "", "language": "Português", "genre": "Poesia/Memórias"}, {"id": 334, "date_read": "17/03/2025", "title": "Diário do Fim do Amor", "author": "Ingrid Fagundez", "original_title": "", "year": 2025, "pages": 192, "publisher": "", "language": "Português", "genre": "Romance"}, {"id": 335, "date_read": "21/03/2025", "title": "Coisas Importantes Também Serão Esquecidas", "author": "Martha Batalha", "original_title": "", "year": 2025, "pages": 128, "publisher": "Companhia das Letras", "language": "Ucraniano", "genre": "Fábula/Política"}, {"id": 336, "date_read": "28/03/2025", "title": "A Revolta dos Bichos", "author": "Mykola Kostomarov", "original_title": "The Caves of Steel", "year": 2019, "pages": 256, "publisher": "", "language": "Inglês", "genre": "Ficção Científica/Policial"}, {"id": 337, "date_read": "29/03/2025", "title": "As Cavernas do Aço", "author": "Isaac Asimov", "original_title": "Le perfezioni", "year": 2024, "pages": 192, "publisher": "Âyiné", "language": "Italiano", "genre": "Romance"}, {"id": 338, "date_read": "16/07/2025", "title": "Corações Sujos", "author": "Fernando Morais", "original_title": "", "year": 2000, "pages": 352, "publisher": "Companhia das Letras", "language": "Português", "genre": "Jornalismo/História"}, {"id": 339, "date_read": "21/07/2025", "title": "Acasos do Destino", "author": "Paco Roca", "original_title": "Desafortunadas", "year": 2022, "pages": 352, "publisher": "Devir", "language": "Espanhol", "genre": "Quadrinhos/História"}, {"id": 340, "date_read": "05/09/2025", "title": "De Volta ao Jogo: A História de Sucesso, Dramas e Viradas do BTG Pactual", "author": "Ariane Abdallah", "original_title": "", "year": 2025, "pages": 400, "publisher": "Portfolio-Penguin", "language": "Português", "genre": "Jornalismo/Economia"}, {"id": 341, "date_read": "06/09/2025", "title": "The Chile Project", "author": "Sebastian Edwards", "original_title": "The Chile Project", "year": 2023, "pages": 343, "publisher": "Princeton University Press", "language": "Inglês", "genre": "Política/História"}, {"id": 342, "date_read": "08/09/2025", "title": "Coisa de Rico", "author": "Michel Alcoforado", "original_title": "", "year": 2024, "pages": 256, "publisher": "Fósforo", "language": "Português", "genre": "Crônicas/Brasil"}, {"id": 343, "date_read": "12/09/2025", "title": "When Genius Failed", "author": "Roger Lowenstein", "original_title": "When Genius Failed", "year": 2000, "pages": 264, "publisher": "Random House", "language": "Inglês", "genre": "Economia/Finanças"}, {"id": 344, "date_read": "25/09/2025", "title": "Bórgia", "author": "Alejandro Jodorowsky, Milo Manara", "original_title": "Borgia", "year": 2022, "pages": 256, "publisher": "Darkside", "language": "Francês", "genre": "Quadrinhos/História"}, {"id": 345, "date_read": "29/09/2025", "title": "O Projeto", "author": "David Graham", "original_title": "The Project", "year": 2025, "pages": 320, "publisher": "", "language": "Inglês", "genre": "Política/Ensaio"}, {"id": 346, "date_read": "06/10/2025", "title": "Esperando Godot", "author": "Samuel Beckett", "original_title": "En attendant Godot", "year": 1952, "pages": 128, "publisher": "Companhia das Letras", "language": "Francês", "genre": "Teatro"}, {"id": 347, "date_read": "11/10/2025", "title": "Meus Mortos: Autorretrato", "author": "Diogo Mainardi", "original_title": "", "year": 2025, "pages": 224, "publisher": "Record", "language": "Português", "genre": "Memórias"}, {"id": 348, "date_read": "12/10/2025", "title": "Le Malentendu", "author": "Albert Camus", "original_title": "Le Malentendu", "year": 1944, "pages": 96, "publisher": "Gallimard", "language": "Francês", "genre": "Teatro"}, {"id": 349, "date_read": "13/10/2025", "title": "Epigenética", "author": "Nessa Carey", "original_title": "The Epigenetics Revolution", "year": 2015, "pages": 352, "publisher": "Cultrix", "language": "Inglês", "genre": "Biologia/Ciência"}, {"id": 350, "date_read": "03/11/2025", "title": "The Case Against the Sexual Revolution", "author": "Louise Perry", "original_title": "The Case Against the Sexual Revolution", "year": 2022, "pages": 224, "publisher": "Polity Press", "language": "Inglês", "genre": "Feminismo/Ensaio"}, {"id": 351, "date_read": "10/12/2025", "title": "Raven Rock", "author": "Garrett M. Graff", "original_title": "Raven Rock", "year": 2017, "pages": 480, "publisher": "Simon & Schuster", "language": "Inglês", "genre": "Política/História"}, {"id": 352, "date_read": "29/12/2025", "title": "The Devil Reached Toward the Sky", "author": "Adam Jermyn", "original_title": "The Devil Reached Toward the Sky", "year": 2024, "pages": 320, "publisher": "", "language": "Inglês", "genre": "Ficção Científica"}, {"id": 353, "date_read": "30/12/2025", "title": "O Polonês", "author": "J.M. Coetzee", "original_title": "The Pole", "year": 2023, "pages": 160, "publisher": "Companhia das Letras", "language": "Inglês", "genre": "Romance"}, {"id": 354, "date_read": "16/01/2026", "title": "When the Sea Came Alive", "author": "Garrett M. Graff", "original_title": "When the Sea Came Alive", "year": 2024, "pages": 480, "publisher": "Avid Reader Press", "language": "Inglês", "genre": "Jornalismo/História"}, {"id": 355, "date_read": "19/01/2026", "title": "O Poder da Geografia", "author": "Tim Marshall", "original_title": "The Power of Geography", "year": 2023, "pages": 352, "publisher": "Intrínseca", "language": "Inglês", "genre": "Política/Geografia"}, {"id": 356, "date_read": "22/01/2026", "title": "Our Moon", "author": "Rebecca Boyle", "original_title": "Our Moon", "year": 2024, "pages": 352, "publisher": "Random House", "language": "Inglês", "genre": "Astronomia/Ciência"}, {"id": 357, "date_read": "05/02/2026", "title": "Pensamentos Diversos", "author": "Blaise Pascal", "original_title": "Pensées", "year": 1670, "pages": 320, "publisher": "Companhia das Letras", "language": "Francês", "genre": "Filosofia"}, {"id": 358, "date_read": "06/02/2026", "title": "A Teoria da Bolsa de Ficção", "author": "Ursula K. Le Guin", "original_title": "The Carrier Bag Theory of Fiction", "year": 2020, "pages": 80, "publisher": "Aleph", "language": "Inglês", "genre": "Ensaio/Literatura"}, {"id": 359, "date_read": "16/02/2026", "title": "Takeover: Hitler's Final Rise to Power", "author": "Timothy W. Ryback", "original_title": "Takeover", "year": 2024, "pages": 384, "publisher": "Knopf", "language": "Inglês", "genre": "História/Política"}, {"id": 360, "date_read": "18/02/2026", "title": "Seis Personagens à Procura de um Autor", "author": "Luigi Pirandello", "original_title": "Sei personaggi in cerca d'autore", "year": 1921, "pages": 128, "publisher": "Perspectiva", "language": "Italiano", "genre": "Teatro"}, {"id": 361, "date_read": "22/03/2026", "title": "Midnight in Chernobyl", "author": "Adam Higginbotham", "original_title": "Midnight in Chernobyl", "year": 2019, "pages": 560, "publisher": "Simon & Schuster", "language": "Inglês", "genre": "Jornalismo/História"}, {"id": 362, "date_read": "30/03/2026", "title": "Devoradores de Estrelas", "author": "Andy Weir", "original_title": "Star Eater", "year": 2025, "pages": 400, "publisher": "Aleph", "language": "Inglês", "genre": "Ficção Científica"}, {"id": 363, "date_read": "06/04/2026", "title": "Forward", "author": "Blake Crouch", "original_title": "Forward", "year": 2021, "pages": 192, "publisher": "Amazon Original Stories", "language": "Inglês", "genre": "Ficção Científica/Contos"}, {"id": 364, "date_read": "07/04/2026", "title": "O Adversário", "author": "Emmanuel Carrère", "original_title": "L'Adversaire", "year": 2002, "pages": 192, "publisher": "Companhia das Letras", "language": "Francês", "genre": "Jornalismo/Ficção"}, {"id": 365, "date_read": "01/04/2025", "title": "As Perfeições", "author": "Vincenzo Latronico", "original_title": "Le perfezioni", "year": 2023, "pages": 192, "publisher": "Âyiné", "language": "Italiano", "genre": "Romance"}, {"id": 366, "date_read": "07/05/2025", "title": "A Máquina do Golpe", "author": "Vários", "original_title": "", "year": 2024, "pages": 320, "publisher": "", "language": "Português", "genre": "Política/Brasil"}, {"id": 367, "date_read": "15/05/2025", "title": "Os Quatro", "author": "Miranda July", "original_title": "All Fours", "year": 2024, "pages": 352, "publisher": "", "language": "Inglês", "genre": "Romance"}, {"id": 368, "date_read": "17/05/2025", "title": "RASL", "author": "Jeff Smith", "original_title": "RASL", "year": 2013, "pages": 480, "publisher": "Devir", "language": "Inglês", "genre": "Quadrinhos/Ficção Científica"}, {"id": 369, "date_read": "18/05/2025", "title": "Tutankáton", "author": "Otavio Frias Filho", "original_title": "", "year": 2024, "pages": 256, "publisher": "Terceiro Sinal", "language": "Português", "genre": "Romance"}, {"id": 370, "date_read": "19/05/2025", "title": "A Bomba", "author": "Howard Zinn", "original_title": "The Bomb", "year": 2011, "pages": 96, "publisher": "", "language": "Inglês", "genre": "Ensaio/Política"}, {"id": 371, "date_read": "09/06/2025", "title": "O Dia e a Noite: Cadernos 1917–1952", "author": "Georges Braque", "original_title": "Le jour et la nuit", "year": 1952, "pages": 128, "publisher": "", "language": "Francês", "genre": "Arte/Aforismos"}, {"id": 372, "date_read": "23/06/2025", "title": "Tecnofeudalism", "author": "Yanis Varoufakis", "original_title": "Technofeudalism", "year": 2023, "pages": 304, "publisher": "", "language": "Inglês", "genre": "Política/Economia"}, {"id": 373, "date_read": "30/06/2025", "title": "Sinais de Nós", "author": "Lina Meruane", "original_title": "Señales de nós", "year": 2024, "pages": 160, "publisher": "", "language": "Espanhol", "genre": "Romance/Identidade"}];
+
+var customBooks = [];
+try { customBooks = JSON.parse(localStorage.getItem('tori_custom_books') || '[]'); } catch(e) {}
+function allBooks() { return BOOKS.concat(customBooks); }
+function saveCustomBooks() {
+  try { localStorage.setItem('tori_custom_books', JSON.stringify(customBooks)); } catch(e) {}
+}
+
+
+// ═══════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════
+const TORI = {
+  primary: '#2A666E', tint: '#AAC6C8', green: '#C0E85F',
+  coral: '#F07F79', gold: '#F0C068', dark: '#1a3f44', darker: '#0f2528',
+  surface2: '#edf3f3'
+};
+
+const MONTHS_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const MONTHS_FULL = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Jul','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+function parseDate(s) {
+  const p = s.split('/');
+  return { day: +p[0], month: +p[1], year: +p[2] };
+}
+
+function getYear(b) { return parseDate(b.date_read).year; }
+function getMonth(b) { return parseDate(b.date_read).month; }
+
+function simplifyGenre(g) {
+  if (!g) return 'Outros';
+  if (g.includes('Romance')) return 'Romance';
+  if (g.includes('Filosofia')) return 'Filosofia';
+  if (g.includes('Física')||g.includes('Ciência')||g.includes('Astronomia')||g.includes('Matemática')||g.includes('Cosmologia')||g.includes('Neurociência')) return 'Ciências';
+  if (g.includes('Jornalismo')||g.includes('Reportagem')) return 'Jornalismo';
+  if (g.includes('Teatro')) return 'Teatro';
+  if (g.includes('Quadrinhos')) return 'Quadrinhos';
+  if (g.includes('Política')||g.includes('História')) return 'Política/História';
+  if (g.includes('Memórias')||g.includes('Autobiografia')||g.includes('Autoficção')) return 'Memórias';
+  if (g.includes('Ficção')) return 'Ficção Científica';
+  if (g.includes('Ensaio')) return 'Ensaio';
+  if (g.includes('Poesia')) return 'Poesia';
+  if (g.includes('Feminismo')) return 'Feminismo';
+  return 'Outros';
+}
+
+const GENRE_COLORS = {
+  'Romance': TORI.coral,
+  'Filosofia': TORI.primary,
+  'Ciências': '#4a9ea6',
+  'Jornalismo': TORI.gold,
+  'Teatro': '#8ab4b8',
+  'Quadrinhos': '#AAC6C8',
+  'Política/História': '#2d5a60',
+  'Memórias': '#6fa8ac',
+  'Ficção Científica': '#7fc4cc',
+  'Ensaio': '#4d7a80',
+  'Poesia': TORI.green,
+  'Feminismo': '#c8e890',
+  'Outros': '#d4e2e3'
+};
+
+const LANG_COLORS = ['#2A666E','#3d8a92','#AAC6C8','#C0E85F','#F0C068','#F07F79','#6fa8ac','#8ab4b8','#4d7a80','#2d5a60'];
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+let filteredBooks = allBooks();
+let currentYear = 'all';
+let currentSort = { col: 'date', dir: 1 };
+let currentPage = 1;
+const PAGE_SIZE = 50;
+let searchQuery = '';
+
+document.addEventListener('DOMContentLoaded', () => {
+  computeStats();
+  renderDashboard();
+  renderYearCards();
+  renderAutores();
+  renderGeneros();
+  renderTable();
+});
+
+function computeStats() {
+  let pages = 0, authors = new Set(), langs = new Set();
+  allBooks().forEach(b => {
+    if (b.pages) pages += +b.pages;
+    b.author.split(',').forEach(a => authors.add(a.trim()));
+    if (b.language) langs.add(b.language.split('/')[0]);
+  });
+  document.getElementById('total-pages').textContent = pages.toLocaleString('pt-BR');
+  document.getElementById('unique-authors').textContent = authors.size;
+  document.getElementById('unique-countries').textContent = langs.size;
+}
+
+// ═══════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════
+const VIEW_TITLES = {
+  dashboard: 'Dashboard',
+  anos: 'Por Ano',
+  autores: 'Autores',
+  generos: 'Gêneros',
+  editoras: 'Editoras',
+  livros: 'Todos os Livros'
+};
+
+function showView(name, el) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  if (el) el.classList.add('active');
+  document.getElementById('topbar-title').textContent = VIEW_TITLES[name];
+  document.getElementById('search-input').value = '';
+  searchQuery = '';
+  if (name === 'livros') { currentYear = 'all'; renderTable(); }
+}
+
+// ═══════════════════════════════════════════════
+// DASHBOARD CHARTS
+// ═══════════════════════════════════════════════
+let chartsCreated = false;
+
+function renderDashboard() {
+  if (chartsCreated) return;
+  chartsCreated = true;
+
+  const years = [...new Set(allBooks().map(b => getYear(b)))].filter(y=>y>=2019).sort();
+  const yearCounts = years.map(y => allBooks().filter(b => getYear(b) === y).length);
+
+  // Chart: Anual
+  new Chart(document.getElementById('chartAnual'), {
+    type: 'bar',
+    data: {
+      labels: years.map(String),
+      datasets: [{
+        data: yearCounts,
+        backgroundColor: years.map((y,i) => yearCounts[i] === Math.max(...yearCounts) ? TORI.primary : TORI.tint),
+        borderRadius: 6, borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.raw} livros` } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { family: "'Bricolage Grotesque', Verdana", size: 12 } } },
+        y: { grid: { color: '#edf3f3' }, ticks: { stepSize: 10,
+          font: { family: "'Bricolage Grotesque', Verdana", size: 11 } } }
+      }
+    }
+  });
+
+  // Chart: Mensal
+  const monthCounts = Array.from({length:12}, (_,i) =>
+    allBooks().filter(b => getMonth(b) === i+1).length);
+  new Chart(document.getElementById('chartMes'), {
+    type: 'line',
+    data: {
+      labels: MONTHS_PT,
+      datasets: [{
+        data: monthCounts,
+        borderColor: TORI.primary, backgroundColor: 'rgba(42,102,110,0.08)',
+        tension: 0.4, fill: true, pointBackgroundColor: TORI.primary,
+        pointRadius: 4, pointHoverRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+        y: { grid: { color: '#edf3f3' }, ticks: { stepSize: 5, font: { size: 11 } } }
+      }
+    }
+  });
+
+  // Chart: Gênero doughnut
+  const genreMap = {};
+  allBooks().forEach(b => {
+    const g = simplifyGenre(b.genre);
+    genreMap[g] = (genreMap[g]||0)+1;
+  });
+  const gEntries = Object.entries(genreMap).sort((a,b)=>b[1]-a[1]);
+  new Chart(document.getElementById('chartGenero'), {
+    type: 'doughnut',
+    data: {
+      labels: gEntries.map(e=>e[0]),
+      datasets: [{ data: gEntries.map(e=>e[1]),
+        backgroundColor: gEntries.map(e=>GENRE_COLORS[e[0]]||'#ccc'),
+        borderWidth: 2, borderColor: '#fff' }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'right',
+        labels: { font: { family: "'Bricolage Grotesque',Verdana", size: 11 },
+          boxWidth: 12, padding: 8 } } }
+    }
+  });
+
+  // Chart: Idioma
+  const langMap = {};
+  allBooks().forEach(b => {
+    const l = (b.language||'Outros').split('/')[0];
+    langMap[l] = (langMap[l]||0)+1;
+  });
+  const lEntries = Object.entries(langMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  new Chart(document.getElementById('chartIdioma'), {
+    type: 'bar',
+    data: {
+      labels: lEntries.map(e=>e[0]),
+      datasets: [{ data: lEntries.map(e=>e[1]),
+        backgroundColor: LANG_COLORS, borderRadius: 4 }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: '#edf3f3' }, ticks: { font: { size: 11 } } },
+        y: { grid: { display: false }, ticks: { font: { size: 12 } } }
+      }
+    }
+  });
+
+  // Heatmap
+  renderHeatmap();
+
+  // Top authors
+  const authMap = {};
+  allBooks().forEach(b => {
+    const a = b.author.split(',')[0].trim();
+    authMap[a] = (authMap[a]||0)+1;
+  });
+  const topAuth = Object.entries(authMap).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const maxA = topAuth[0][1];
+  const list = document.getElementById('top-authors-list');
+  topAuth.forEach(([name, cnt], i) => {
+    const li = document.createElement('li');
+    li.className = 'rank-item';
+    li.innerHTML = `
+      <span class="rank-num">${i+1}</span>
+      <div class="rank-bar-wrap">
+        <div class="rank-name">${name}</div>
+        <div class="rank-bar ${i<3?'fill-'+(i+1):''}\" style="width:${(cnt/maxA*100).toFixed(0)}%"></div>
+      </div>
+      <span class="rank-count">${cnt}</span>
+    `;
+    list.appendChild(li);
+  });
+
+  // Páginas por ano
+  const pagesByYear = years.map(y => {
+    return allBooks().filter(b => getYear(b)===y).reduce((s,b) => s+(+b.pages||0), 0);
+  });
+  new Chart(document.getElementById('chartPaginas'), {
+    type: 'bar',
+    data: {
+      labels: years.map(String),
+      datasets: [{
+        data: pagesByYear,
+        backgroundColor: TORI.gold, borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toLocaleString('pt-BR')} págs` } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 12 } } },
+        y: { grid: { color: '#edf3f3' }, ticks: { font: { size: 11 },
+          callback: v => v >= 1000 ? (v/1000).toFixed(0)+'k' : v } }
+      }
+    }
+  });
+}
+
+function renderHeatmap() {
+  const container = document.getElementById('heatmap-container');
+  const byYearMonth = {};
+  allBooks().forEach(b => {
+    const d = parseDate(b.date_read);
+    const key = `${d.year}-${d.month}`;
+    byYearMonth[key] = (byYearMonth[key]||0)+1;
+  });
+
+  const years = [...new Set(allBooks().map(b => getYear(b)))].filter(y=>y>=2019).sort();
+  let html = '';
+  years.forEach(y => {
+    const counts = Array.from({length:12},(_,i)=>byYearMonth[`${y}-${i+1}`]||0);
+    const max = Math.max(...counts);
+    html += `<div style="margin-bottom:12px;">
+      <div style="font-size:11px;font-weight:700;color:var(--tori-primary);margin-bottom:6px;">${y}</div>
+      <div class="heatmap-grid">`;
+    counts.forEach((c, mi) => {
+      const lvl = c===0?0:c<=2?1:c<=4?2:c<=6?3:c<=8?4:5;
+      html += `<div class="heatmap-month heat-${lvl}" title="${MONTHS_FULL[mi]} ${y}: ${c} livros">
+        <span class="hm-count">${c||''}</span>
+        <span class="hm-label">${MONTHS_PT[mi]}</span>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+  container.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════
+// ANOS VIEW
+// ═══════════════════════════════════════════════
+const YEAR_DATA = (function(){
+  var cnt = {};
+  allBooks().forEach(function(b){ var y=getYear(b); cnt[y]=(cnt[y]||0)+1; });
+  return Object.keys(cnt).sort().map(function(y){ return {y:+y, n:cnt[y]}; });
+})();
+let activeYearCard = null;
+
+function renderYearCards() {
+  const cont = document.getElementById('year-cards-container');
+  YEAR_DATA.forEach(({y,n}) => {
+    const div = document.createElement('div');
+    div.className = 'year-card';
+    div.innerHTML = `
+      <div class="year-count">${n}</div>
+      <div class="year-num">${y}</div>
+      <div class="year-label">livros</div>
+    `;
+    div.onclick = () => selectYear(y, div);
+    cont.appendChild(div);
+  });
+}
+
+let yearChartInstance = null;
+
+function selectYear(y, el) {
+  document.querySelectorAll('.year-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+
+  const books = allBooks().filter(b => getYear(b) === y);
+  const detail = document.getElementById('year-detail-area');
+
+  // Top authors for year
+  const authMap = {};
+  books.forEach(b => {
+    const a = b.author.split(',')[0].trim();
+    authMap[a] = (authMap[a]||0)+1;
+  });
+  const topAuth = Object.entries(authMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const maxA = topAuth[0]?.[1]||1;
+
+  // Genre for year
+  const genMap = {};
+  books.forEach(b => { const g=simplifyGenre(b.genre); genMap[g]=(genMap[g]||0)+1; });
+  const gEntries = Object.entries(genMap).sort((a,b)=>b[1]-a[1]);
+
+  // Month distribution
+  const monthCounts = Array.from({length:12},(_,i)=>books.filter(b=>getMonth(b)===i+1).length);
+  const totalPages = books.reduce((s,b)=>s+(+b.pages||0),0);
+
+  detail.innerHTML = `
+    <div class="section-header" style="margin-top:8px;">
+      <span class="section-title">${y}</span>
+      <span class="section-sub">${books.length} livros · ${totalPages.toLocaleString('pt-BR')} páginas</span>
+    </div>
+    <div class="charts-grid" style="margin-bottom:20px;">
+      <div class="chart-card">
+        <div class="chart-title">Distribuição Mensal — ${y}</div>
+        <div class="chart-sub">Ritmo de leitura ao longo do ano</div>
+        <div class="chart-wrap" style="height:180px"><canvas id="yearChart-${y}"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Autores Mais Lidos — ${y}</div>
+        <div class="chart-sub">Top ${topAuth.length} autores</div>
+        <ul class="rank-list" id="year-authors-${y}"></ul>
+      </div>
+    </div>
+    <div class="chart-card" style="margin-bottom:20px;">
+      <div class="chart-title">Todos os livros de ${y}</div>
+      <div class="chart-sub">${books.length} leituras</div>
+      <div class="table-wrap table-scroll" style="margin-top:12px;">
+        <div class="table-header-row">
+          <div class="th col-date">Data</div>
+          <div class="th col-title" style="flex:1">Título</div>
+          <div class="th col-author">Autor</div>
+          <div class="th col-genre">Gênero</div>
+          <div class="th col-pages">Págs</div>
+        </div>
+        <div id="year-books-table-${y}"></div>
+      </div>
+    </div>
+  `;
+
+  // Render month chart
+  new Chart(document.getElementById(`yearChart-${y}`), {
+    type: 'bar',
+    data: {
+      labels: MONTHS_PT,
+      datasets: [{
+        data: monthCounts,
+        backgroundColor: monthCounts.map(c => c === Math.max(...monthCounts) ? TORI.primary : TORI.tint),
+        borderRadius: 5
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+        y: { grid: { color: '#edf3f3' }, ticks: { stepSize: 2, font: { size: 10 } } }
+      }
+    }
+  });
+
+  // Top authors list
+  const authList = document.getElementById(`year-authors-${y}`);
+  topAuth.forEach(([name,cnt],i) => {
+    const li = document.createElement('li');
+    li.className = 'rank-item';
+    li.innerHTML = `
+      <span class="rank-num">${i+1}</span>
+      <div class="rank-bar-wrap">
+        <div class="rank-name">${name}</div>
+        <div class="rank-bar ${i<3?'fill-'+(i+1):''}" style="width:${(cnt/maxA*100).toFixed(0)}%"></div>
+      </div>
+      <span class="rank-count">${cnt}</span>
+    `;
+    authList.appendChild(li);
+  });
+
+  // Books table
+  const tbody = document.getElementById(`year-books-table-${y}`);
+  books.forEach(b => {
+    const row = document.createElement('div');
+    row.className = 'book-row';
+    row.style.cssText = 'padding:0 20px;';
+    row.innerHTML = `
+      <div class="td col-date">${b.date_read}</div>
+      <div class="td col-title" style="flex:1">${b.title}</div>
+      <div class="td col-author">${b.author.split(',')[0]}</div>
+      <div class="td col-genre"><span class="genre-badge">${simplifyGenre(b.genre)}</span></div>
+      <div class="td col-pages">${b.pages||'—'}</div>
+    `;
+    row.onclick = () => openModal(b);
+    tbody.appendChild(row);
+  });
+}
+
+// ═══════════════════════════════════════════════
+// AUTORES VIEW
+// ═══════════════════════════════════════════════
+function renderAutores() {
+  const authMap = {};
+  allBooks().forEach(b => {
+    const a = b.author.split(',')[0].trim();
+    authMap[a] = (authMap[a]||0)+1;
+  });
+  const sorted = Object.entries(authMap).sort((a,b)=>b[1]-a[1]).slice(0,15);
+  const max = sorted[0][1];
+
+  const list = document.getElementById('authors-full-list');
+  sorted.forEach(([name,cnt],i) => {
+    const li = document.createElement('li');
+    li.className = 'rank-item';
+    li.innerHTML = `
+      <span class="rank-num">${i+1}</span>
+      <div class="rank-bar-wrap">
+        <div class="rank-name">${name}</div>
+        <div class="rank-bar ${i<3?'fill-'+(i+1):''}" style="width:${(cnt/max*100).toFixed(0)}%"></div>
+      </div>
+      <span class="rank-count">${cnt}</span>
+    `;
+    list.appendChild(li);
+  });
+
+  // Lang bars
+  const langMap = {};
+  allBooks().forEach(b => {
+    const l = (b.language||'Outros').split('/')[0];
+    langMap[l] = (langMap[l]||0)+1;
+  });
+  const langSorted = Object.entries(langMap).sort((a,b)=>b[1]-a[1]);
+  const maxL = langSorted[0][1];
+  const container = document.getElementById('lang-bars-container');
+  langSorted.forEach(([lang,cnt],i) => {
+    const div = document.createElement('div');
+    div.className = 'progress-row';
+    div.innerHTML = `
+      <span class="progress-label">${lang}</span>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" style="width:${(cnt/maxL*100).toFixed(0)}%;background:${LANG_COLORS[i%LANG_COLORS.length]}"></div>
+      </div>
+      <span class="progress-count">${cnt}</span>
+    `;
+    container.appendChild(div);
+  });
+}
+
+// ═══════════════════════════════════════════════
+// GÊNEROS VIEW
+// ═══════════════════════════════════════════════
+let generoChartsCreated = false;
+
+function renderGeneros() {
+  if (generoChartsCreated) return;
+  generoChartsCreated = true;
+
+  const genMap = {};
+  allBooks().forEach(b => { const g=simplifyGenre(b.genre); genMap[g]=(genMap[g]||0)+1; });
+  const gEntries = Object.entries(genMap).sort((a,b)=>b[1]-a[1]);
+
+  new Chart(document.getElementById('chartGenero2'), {
+    type: 'doughnut',
+    data: {
+      labels: gEntries.map(e=>e[0]),
+      datasets: [{ data: gEntries.map(e=>e[1]),
+        backgroundColor: gEntries.map(e=>GENRE_COLORS[e[0]]||'#ccc'),
+        borderWidth: 2, borderColor: '#fff' }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom',
+        labels: { font: { family: "'Bricolage Grotesque',Verdana", size: 11 },
+          boxWidth: 12, padding: 8 } } }
+    }
+  });
+
+  // Stacked by year
+  const years = [...new Set(allBooks().map(b => getYear(b)))].filter(y=>y>=2019).sort();
+  const topGenres = gEntries.slice(0,6).map(e=>e[0]);
+  const datasets = topGenres.map(g => ({
+    label: g,
+    data: years.map(y => BOOKS.filter(b=>getYear(b)===y&&simplifyGenre(b.genre)===g).length),
+    backgroundColor: GENRE_COLORS[g]||'#ccc',
+    borderRadius: 3,
+  }));
+
+  new Chart(document.getElementById('chartGeneroAno'), {
+    type: 'bar',
+    data: { labels: years.map(String), datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { font: { size: 12 } } },
+        y: { stacked: true, grid: { color: '#edf3f3' }, ticks: { font: { size: 11 } } }
+      },
+      plugins: { legend: { position: 'bottom',
+        labels: { font: { size: 11 }, boxWidth: 12, padding: 8 } } }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════
+// EDITORAS VIEW
+// ═══════════════════════════════════════════════
+var editorasChartsCreated = false;
+function renderEditoras() {
+  if (editorasChartsCreated) return;
+  editorasChartsCreated = true;
+
+  const pubMap = {};
+  allBooks().forEach(b => {
+    const p = (b.publisher || '').trim() || '(sem editora)';
+    pubMap[p] = (pubMap[p] || 0) + 1;
+  });
+  const entries = Object.entries(pubMap).sort((a,b) => b[1]-a[1]);
+  const top15 = entries.slice(0, 15);
+
+  const COLORS = [
+    '#2A666E','#F0C068','#F07F79','#C0E85F','#AAC6C8',
+    '#1e4d53','#c0b040','#c05060','#88aa30','#7ab0b4',
+    '#3d8a90','#e0a050','#e06070','#a0cc50','#90c8cc'
+  ];
+
+  new Chart(document.getElementById('chartEditorasBar'), {
+    type: 'bar',
+    data: {
+      labels: top15.map(e => e[0]),
+      datasets: [{ data: top15.map(e => e[1]),
+        backgroundColor: top15.map((_,i) => COLORS[i % COLORS.length]),
+        borderRadius: 4, borderSkipped: false }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x} livros` } } },
+      scales: {
+        x: { grid: { color: '#edf3f3' }, ticks: { font: { size: 11 } } },
+        y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+
+  const years = [...new Set(allBooks().map(b => getYear(b)))].filter(y => y >= 2019).sort();
+  const top6 = entries.slice(0, 6).map(e => e[0]);
+  const datasets = top6.map((pub, i) => ({
+    label: pub,
+    data: years.map(y => allBooks().filter(b => getYear(b) === y && (b.publisher||'(sem editora)') === pub).length),
+    backgroundColor: COLORS[i],
+    borderRadius: 3,
+  }));
+
+  new Chart(document.getElementById('chartEditorasAno'), {
+    type: 'bar',
+    data: { labels: years.map(String), datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { font: { size: 12 } } },
+        y: { stacked: true, grid: { color: '#edf3f3' }, ticks: { font: { size: 11 } } }
+      },
+      plugins: { legend: { position: 'bottom',
+        labels: { font: { size: 10 }, boxWidth: 12, padding: 6 } } }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════
+// TABLE VIEW
+// ═══════════════════════════════════════════════
+function filterYear(y, el) {
+  currentYear = y;
+  currentPage = 1;
+  document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderTable();
+}
+
+function onSearch(q) {
+  searchQuery = q.toLowerCase();
+  currentPage = 1;
+  renderTable();
+}
+
+function sortBy(col) {
+  if (currentSort.col === col) currentSort.dir *= -1;
+  else { currentSort.col = col; currentSort.dir = 1; }
+  currentPage = 1;
+  renderTable();
+}
+
+function renderTable() {
+  let books = allBooks().slice();
+
+  // Year filter
+  if (currentYear !== 'all') books = books.filter(b => getYear(b) === +currentYear);
+
+  // Search
+  if (searchQuery) {
+    books = books.filter(b =>
+      b.title.toLowerCase().includes(searchQuery) ||
+      b.author.toLowerCase().includes(searchQuery) ||
+      (b.genre||'').toLowerCase().includes(searchQuery) ||
+      (b.language||'').toLowerCase().includes(searchQuery)
+    );
+  }
+
+  // Sort
+  const col = currentSort.col;
+  books.sort((a,b) => {
+    let va, vb;
+    if (col === 'date') {
+      const pa = parseDate(a.date_read), pb = parseDate(b.date_read);
+      va = pa.year*10000+pa.month*100+pa.day;
+      vb = pb.year*10000+pb.month*100+pb.day;
+    } else if (col === 'title') { va = a.title.toLowerCase(); vb = b.title.toLowerCase(); }
+    else if (col === 'author') { va = a.author.toLowerCase(); vb = b.author.toLowerCase(); }
+    else if (col === 'pages') { va = +a.pages||0; vb = +b.pages||0; }
+    else if (col === 'year') { va = +a.year||0; vb = +b.year||0; }
+    else return 0;
+    if (va < vb) return -currentSort.dir;
+    if (va > vb) return currentSort.dir;
+    return 0;
+  });
+
+  // Update count
+  document.getElementById('livros-count').textContent = `${books.length} livros`;
+
+  // Pagination
+  const total = books.length;
+  const totalPages = Math.ceil(total / PAGE_SIZE);
+  if (currentPage > totalPages) currentPage = 1;
+  const slice = books.slice((currentPage-1)*PAGE_SIZE, currentPage*PAGE_SIZE);
+
+  const tbody = document.getElementById('books-tbody');
+  tbody.innerHTML = '';
+  slice.forEach((b,i) => {
+    const row = document.createElement('div');
+    row.className = 'book-row';
+    row.innerHTML = `
+      <div class="td col-num">${(currentPage-1)*PAGE_SIZE+i+1}</div>
+      <div class="td col-date">${b.date_read}</div>
+      <div class="td col-title">${b.title}</div>
+      <div class="td col-author">${b.author.split(',')[0]}</div>
+      <div class="td col-genre"><span class="genre-badge">${simplifyGenre(b.genre)}</span></div>
+      <div class="td col-lang" style="font-size:12px;color:var(--text-muted)">${(b.language||'').split('/')[0]}</div>
+      <div class="td col-pages">${b.pages||'—'}</div>
+      <div class="td col-year" style="font-size:12px;color:var(--text-muted)">${b.year||'—'}</div>
+    `;
+    row.onclick = () => openModal(b);
+    tbody.appendChild(row);
+  });
+
+  if (slice.length === 0) {
+    tbody.innerHTML = '<div class="empty">Nenhum livro encontrado.</div>';
+  }
+
+  // Sort arrows
+  ['date','title','author','pages'].forEach(c => {
+    const el = document.getElementById('sort-'+c);
+    if (el) el.textContent = currentSort.col===c ? (currentSort.dir===1?'↑':'↓') : '';
+  });
+
+  // Pagination
+  const pag = document.getElementById('pagination');
+  if (totalPages <= 1) { pag.innerHTML=''; return; }
+
+  let pagHtml = `<span>Mostrando ${(currentPage-1)*PAGE_SIZE+1}–${Math.min(currentPage*PAGE_SIZE,total)} de ${total}</span>`;
+  pagHtml += '<div class="page-btns">';
+  pagHtml += `<button class="page-btn" onclick="gotoPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+
+  const pages = [];
+  for (let p=1; p<=totalPages; p++) {
+    if (p===1||p===totalPages||Math.abs(p-currentPage)<=2) pages.push(p);
+    else if (pages[pages.length-1]!=='…') pages.push('…');
+  }
+  pages.forEach(p => {
+    if (p==='…') pagHtml += `<button class="page-btn" disabled>…</button>`;
+    else pagHtml += `<button class="page-btn ${p===currentPage?'active':''}" onclick="gotoPage(${p})">${p}</button>`;
+  });
+  pagHtml += `<button class="page-btn" onclick="gotoPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>›</button>`;
+  pagHtml += '</div>';
+  pag.innerHTML = pagHtml;
+}
+
+function gotoPage(p) {
+  const total = filteredBooks.length || allBooks().length;
+  currentPage = Math.max(1, Math.min(p, Math.ceil(allBooks().length/PAGE_SIZE)));
+  renderTable();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ═══════════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════════
+function openModal(b) {
+  document.getElementById('modal-title').textContent = b.title;
+  document.getElementById('modal-orig').textContent =
+    b.original_title ? `"${b.original_title}"` : '';
+
+  const rows = [
+    ['Autor', b.author],
+    ['Data de Leitura', b.date_read],
+    ['Publicado em', b.year || '—'],
+    ['Páginas', b.pages || '—'],
+    ['Editora', b.publisher || '—'],
+    ['Idioma Original', b.language || '—'],
+    ['Gênero', b.genre || '—'],
+    ['ISBN', b.isbn || '—'],
+  ];
+  document.getElementById('modal-body').innerHTML = rows.map(([k,v]) =>
+    `<div class="modal-row"><span class="modal-key">${k}</span><span class="modal-val">${v}</span></div>`
+  ).join('');
+
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modal-overlay')) return;
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+// Lazy render generos when tab is clicked
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', function() {
+    const view = this.dataset.view;
+    if (view === 'generos') setTimeout(renderGeneros, 50);
+    if (view === 'editoras') setTimeout(renderEditoras, 50);
+  });
+});
+</script>
+
+<!-- FAB -->
+<button class="fab" onclick="openAdd()" title="Adicionar livro">+</button>
+
+<!-- ADD MODAL -->
+<div class="add-overlay" id="add-overlay" onclick="if(event.target===this)closeAdd()">
+  <div class="add-panel">
+    <!-- Step 1: URL input -->
+    <div id="step-url">
+      <div class="add-title">📖 Adicionar Livro</div>
+      <div class="add-sub">Cole o link da Amazon abaixo</div>
+      <div class="f-group">
+        <label class="f-label">Link Amazon</label>
+        <input class="f-input" id="f-url" type="url" placeholder="https://www.amazon.com.br/...">
+      </div>
+      <div id="fetch-log" style="display:none;margin-bottom:10px;"></div>
+      <button class="btn-add" id="btn-buscar" onclick="startFetch()">Buscar Livro</button>
+      <div class="add-status" id="fetch-status"></div>
+    </div>
+
+    <!-- Step 2: Confirm + date -->
+    <div id="step-confirm" style="display:none;">
+      <div class="add-title">✓ Livro Encontrado</div>
+      <div class="add-sub" style="margin-bottom:14px;">Confirme os dados e informe quando leu</div>
+
+      <div class="preview-box" style="margin-bottom:16px;">
+        <div class="preview-title" id="pv-title"></div>
+        <div class="preview-meta" id="pv-meta"></div>
+      </div>
+
+      <div class="f-group" style="background:var(--tori-primary);border-radius:12px;padding:16px 14px;margin-bottom:16px;">
+        <label class="f-label" style="color:rgba(255,255,255,0.7);">Quando você leu?</label>
+        <input class="f-input" id="f-date" type="date" style="background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.3);color:#fff;font-size:16px;height:48px;">
+      </div>
+
+      <details style="margin-bottom:14px;">
+        <summary style="font-size:11px;color:var(--text-muted);cursor:pointer;letter-spacing:0.5px;text-transform:uppercase;font-weight:600;">Editar metadados</summary>
+        <div style="margin-top:12px;">
+          <div class="f-group">
+            <label class="f-label">Título</label>
+            <input class="f-input" id="f-title" type="text">
+          </div>
+          <div class="f-group">
+            <label class="f-label">Autor</label>
+            <input class="f-input" id="f-author" type="text">
+          </div>
+          <div class="f-row">
+            <div class="f-group"><label class="f-label">Páginas</label><input class="f-input" id="f-pages" type="number"></div>
+            <div class="f-group"><label class="f-label">Idioma</label><input class="f-input" id="f-lang" type="text"></div>
+          </div>
+          <div class="f-row">
+            <div class="f-group"><label class="f-label">Editora</label><input class="f-input" id="f-pub" type="text"></div>
+            <div class="f-group"><label class="f-label">Gênero</label><input class="f-input" id="f-genre" type="text"></div>
+          </div>
+          <div class="f-group"><label class="f-label">ISBN</label><input class="f-input" id="f-isbn" type="text"></div>
+        </div>
+      </details>
+
+      <div style="display:flex;gap:10px;">
+        <button class="btn-add" style="background:var(--surface2);color:var(--tori-primary);flex:0 0 auto;width:44px;font-size:18px;" onclick="backToUrl()" title="Voltar">←</button>
+        <button class="btn-add" style="flex:1;" onclick="confirmAdd()">Salvar na Biblioteca</button>
+      </div>
+      <div class="add-status" id="add-status"></div>
+    </div>
+
+    <!-- Step 3: Manual fallback -->
+    <div id="step-manual" style="display:none;">
+      <div class="add-title">✏️ Preencher Manualmente</div>
+      <div class="add-sub">Não consegui buscar os dados. Preencha abaixo.</div>
+      <div class="f-group">
+        <label class="f-label">Título *</label>
+        <input class="f-input" id="fm-title" type="text" placeholder="Título do livro">
+      </div>
+      <div class="f-group">
+        <label class="f-label">Autor *</label>
+        <input class="f-input" id="fm-author" type="text" placeholder="Nome do autor">
+      </div>
+      <div class="f-group" style="background:var(--tori-primary);border-radius:12px;padding:16px 14px;margin-bottom:4px;">
+        <label class="f-label" style="color:rgba(255,255,255,0.7);">Quando você leu?</label>
+        <input class="f-input" id="fm-date" type="date" style="background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.3);color:#fff;font-size:16px;height:48px;">
+      </div>
+      <div class="f-row" style="margin-top:14px;">
+        <div class="f-group"><label class="f-label">Páginas</label><input class="f-input" id="fm-pages" type="number"></div>
+        <div class="f-group"><label class="f-label">Idioma</label><input class="f-input" id="fm-lang" type="text"></div>
+      </div>
+      <div class="f-row">
+        <div class="f-group"><label class="f-label">Editora</label><input class="f-input" id="fm-pub" type="text"></div>
+        <div class="f-group"><label class="f-label">Gênero</label><input class="f-input" id="fm-genre" type="text"></div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn-add" style="background:var(--surface2);color:var(--tori-primary);flex:0 0 auto;width:44px;font-size:18px;" onclick="backToUrl()" title="Voltar">←</button>
+        <button class="btn-add" style="flex:1;" onclick="confirmManual()">Salvar na Biblioteca</button>
+      </div>
+      <div class="add-status" id="manual-status"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var fetchedMeta = null;
+
+function openAdd() {
+  showStep('url');
+  document.getElementById('add-overlay').classList.add('open');
+  document.getElementById('f-url').value = '';
+  document.getElementById('fetch-log').innerHTML = '';
+  document.getElementById('fetch-log').style.display = 'none';
+  document.getElementById('fetch-status').textContent = '';
+  document.getElementById('fetch-status').className = 'add-status';
+}
+function closeAdd() {
+  document.getElementById('add-overlay').classList.remove('open');
+  fetchedMeta = null;
+}
+function showStep(s) {
+  ['step-url','step-confirm','step-manual'].forEach(function(id){
+    document.getElementById(id).style.display = id === 'step-'+s ? 'block' : 'none';
+  });
+}
+function backToUrl() { showStep('url'); }
+
+function addStep(id, state, text) {
+  var log = document.getElementById('fetch-log'); log.style.display = 'block';
+  var el = document.getElementById('step-'+id);
+  if (!el) { el = document.createElement('div'); el.id = 'step-'+id; el.className = 'step-row';
+    el.innerHTML = '<div class="step-dot" id="dot-'+id+'"></div><span id="txt-'+id+'"></span>'; log.appendChild(el); }
+  document.getElementById('dot-'+id).className = 'step-dot '+state;
+  document.getElementById('txt-'+id).textContent = text;
+}
+
+async function startFetch() {
+  var url = document.getElementById('f-url').value.trim();
+  if (!url) { document.getElementById('fetch-status').textContent = 'Cole um link da Amazon.'; return; }
+  document.getElementById('fetch-log').innerHTML = '';
+  document.getElementById('btn-buscar').disabled = true;
+  addStep('s1','spin','Buscando metadados...');
+  try {
+    var r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 350,
+        messages: [{role:'user', content:'Link Amazon: '+url+'\n\nExtraia as informações do livro. Responda APENAS com JSON válido sem markdown:\n{"title":"","author":"","original_title":"","year":0,"pages":0,"publisher":"","language":"","genre":"","isbn":""}\n- language: idioma original em que o livro foi escrito (ex: Inglês, Francês, Português)\n- genre: gênero simplificado (Romance, Filosofia, Ciências, Jornalismo, Teatro, Quadrinhos, Política/História, Memórias, Ensaio, Ficção Científica, Poesia)\n- year: ano de publicação original\nSe não souber um campo, deixe vazio.'}]
+      })
+    });
+    var d = await r.json();
+    var txt = (d.content && d.content[0] && d.content[0].text) || '';
+    var book = JSON.parse(txt.replace(/```json|```/g,'').trim());
+    fetchedMeta = book;
+    addStep('s1','ok','Encontrado!');
+    document.getElementById('pv-title').textContent = book.title || '—';
+    document.getElementById('pv-meta').textContent = [book.author, book.language, book.genre,
+      book.year ? '('+book.year+')' : '', book.pages ? book.pages+'p' : ''].filter(Boolean).join(' · ');
+    // Pre-fill editable fields
+    document.getElementById('f-title').value = book.title || '';
+    document.getElementById('f-author').value = book.author || '';
+    document.getElementById('f-isbn').value = book.isbn || '';
+    document.getElementById('f-pages').value = book.pages || '';
+    document.getElementById('f-lang').value = book.language || '';
+    document.getElementById('f-pub').value = book.publisher || '';
+    document.getElementById('f-genre').value = book.genre || '';
+    // Set today's date
+    var t = new Date();
+    document.getElementById('f-date').value = t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');
+    showStep('confirm');
+  } catch(e) {
+    addStep('s1','','Não foi possível buscar automaticamente');
+    document.getElementById('fetch-status').textContent = 'Tentando de novo... ou clique para preencher manualmente.';
+    // Set today on manual form too
+    var t = new Date();
+    document.getElementById('fm-date').value = t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');
+    showStep('manual');
+  }
+  document.getElementById('btn-buscar').disabled = false;
+}
+
+function saveNewBook(title, author, dateVal, pages, lang, pub, genre, isbn, meta) {
+  if (!dateVal) { alert('Informe a data de leitura.'); return false; }
+  if (!title || !author) { alert('Título e autor são obrigatórios.'); return false; }
+  var p = dateVal.split('-');
+  var nb = {
+    id: Math.max.apply(null, allBooks().map(function(b){return b.id||0;})) + 1,
+    date_read: p[2]+'/'+p[1]+'/'+p[0],
+    title: title, author: author,
+    original_title: (meta && meta.original_title) || '',
+    year: (meta && meta.year) || '',
+    pages: parseInt(pages) || (meta && meta.pages) || '',
+    publisher: pub || (meta && meta.publisher) || '',
+    language: lang || (meta && meta.language) || '',
+    genre: genre || (meta && meta.genre) || '',
+    isbn: isbn || (meta && meta.isbn) || ''
+  };
+  customBooks.push(nb); saveCustomBooks();
+  var el = document.getElementById('stat-total'); if (el) el.textContent = allBooks().length;
+  renderTable(); return true;
+}
+
+function confirmAdd() {
+  var ok = saveNewBook(
+    document.getElementById('f-title').value.trim(),
+    document.getElementById('f-author').value.trim(),
+    document.getElementById('f-date').value,
+    document.getElementById('f-pages').value,
+    document.getElementById('f-lang').value,
+    document.getElementById('f-pub').value,
+    document.getElementById('f-genre').value,
+    document.getElementById('f-isbn').value,
+    fetchedMeta
+  );
+  if (!ok) return;
+  document.getElementById('add-status').textContent = '✓ Salvo!';
+  document.getElementById('add-status').className = 'add-status ok';
+  setTimeout(closeAdd, 1200);
+}
+
+function confirmManual() {
+  var ok = saveNewBook(
+    document.getElementById('fm-title').value.trim(),
+    document.getElementById('fm-author').value.trim(),
+    document.getElementById('fm-date').value,
+    document.getElementById('fm-pages').value,
+    document.getElementById('fm-lang').value,
+    document.getElementById('fm-pub').value,
+    document.getElementById('fm-genre').value,
+    '', null
+  );
+  if (!ok) return;
+  document.getElementById('manual-status').textContent = '✓ Salvo!';
+  document.getElementById('manual-status').className = 'add-status ok';
+  setTimeout(closeAdd, 1200);
+}
+
+var _oldCS = computeStats;
+computeStats = function() { _oldCS(); var el = document.getElementById('stat-total'); if (el) el.textContent = allBooks().length; };
+</script>
+</body>
